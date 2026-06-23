@@ -1,0 +1,1769 @@
+
+PROTOGENESIS: PRIMORDIA
+Prompts de Claude Code — Guía Completa
+
+6 Fases  ·  30 Prompts  ·  Mini-juego 1v1 jugable en ~2 semanas
+Basado en Assets de Protogenesis v5.2  ·  GDD Definitivo v2.0
+
+
+ÍNDICE DE PROMPTS
+N°
+NOMBRE
+FASE
+RESULTADO
+0.1
+Limpieza de scripts obsoletos
+Fase 0
+Proyecto limpio sin referencias rotas
+0.2
+Nueva estructura de carpetas
+Fase 0
+Carpetas Views/, Interior/, Exterior/, Specialization/
+0.3
+Adaptar ResourceManager a 4 recursos
+Fase 0
+ATP, AminoAcids, Nucleotides, Lipids funcionando
+0.4
+StressSystem desde InstabilitySystem
+Fase 0
+Sistema de stress con 8 factores y 5 umbrales
+1.1
+ViewManager — dos cámaras, Tab toggle
+Fase 1
+Tab alterna entre interior y exterior
+1.2
+ViewTransition — fade entre vistas
+Fase 1
+Transición visual de 0.3s con bloqueo de input
+1.3
+PersistentHUD — recursos en ambas vistas
+Fase 1
+HUD con 4 recursos, HP y balance ATP siempre visible
+2.1
+AtmosphereParticles — moléculas flotantes
+Fase 2
+Interior celular vivo con partículas reactivas
+2.2
+Núcleo clickeable y NucleusPanel
+Fase 2
+Panel de 3 pestañas al hacer click en el núcleo
+2.3
+OrganelleInstaller — 6 orgánulos base
+Fase 2
+Orgánulos aparecen visualmente al instalarse
+2.4
+GeneManager adaptado — toggle ON/OFF
+Fase 2
+Regulación génica con costo ATP por gen
+3.1
+ExteriorMap + FogOfWar
+Fase 3
+Mapa 64×64 con niebla de guerra
+3.2
+PlayerCellExterior — célula movible
+Fase 3
+Click derecho mueve la célula. Absorbe recursos.
+3.3
+ResourceNode + Spawner
+Fase 3
+Nodos de recursos con regeneración
+3.4
+ZoomManager — 3 niveles de zoom
+Fase 3
+Zoom interior / célula / mapa completo
+4.1
+MetabolismEngine — flujo ATP completo
+Fase 4
+Producción, consumo pasivo, crisis energética
+4.2
+SpecializationTracker + UI
+Fase 4
+Barras de progreso y consolidación al 60%
+4.3
+LegacySystem — el sistema de Legado
+Fase 4
+Unidades vivas se vuelven Legado al consolidar
+5.1
+MoleculeSecretor — secretar unidades
+Fase 5
+Unidades emergen de la membrana exterior
+5.2
+Unidad: Flagelo Bacteriano
+Fase 5
+Primera unidad de ataque directa funcionando
+5.3
+Unidad: Gránulo Azurófilo (Neutrófilo)
+Fase 5
+Segunda unidad con degranulación y NET
+5.4
+EnvironmentalEventSystem — 2 eventos
+Fase 5
+Ola de calor e inundación de nutrientes activos
+5.5
+RivalAI — IA básica del rival
+Fase 5
+El rival farmea, instala orgánulos y ataca
+5.6
+VictoryManager adaptado
+Fase 5
+Victoria por eliminación o inanición de 60 ticks
+5.7
+PostMatchUI — pantalla post-partida
+Fase 5
+Pantalla de victoria/derrota con diagnóstico
+6.1
+Playtest — flujo completo end-to-end
+Fase 6
+Una partida completa sin bugs críticos
+6.2
+Balance de ATP y curvas económicas
+Fase 6
+La partida dura 3–8 minutos de forma consistente
+6.3
+SnapshotSystem — exportar a Protogenesis
+Fase 6
+JSON con estado final de la célula
+
+
+
+  ⬛  FASE 0  —  SETUP Y LIMPIEZA  
+Antes de escribir código nuevo, el proyecto tiene que quedar limpio. Scripts obsoletos removidos, estructura de carpetas correcta, sistemas base adaptados. No saltear esta fase — cada prompt posterior asume que este setup está hecho.
+
+  PROMPT 0.1     Limpieza de Scripts Obsoletos
+Objetivo: Mover los scripts del viejo Protogenesis que no aplican al nuevo diseño a una carpeta _Deprecated/ sin borrarlos. Verificar que el proyecto compila sin errores.
+Criterio de éxito: El proyecto compila. No hay errores de referencia nula en la consola de Unity.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Tengo el proyecto Unity de Protogenesis v5.2.
+  Voy a convertirlo en Protogenesis: Primordia, un juego diferente.
+  Necesito limpiar los scripts obsoletos antes de empezar.
+   
+  OBJETIVO: Mover estos scripts a Assets/Scripts/_Deprecated/
+  (crear la carpeta si no existe). NO borrarlos — solo moverlos.
+   
+  SCRIPTS A MOVER:
+  - Assets/Scripts/Player/CAP.cs
+  - Assets/Scripts/Player/CAPStats.cs
+  - Assets/Scripts/Player/ProtobacteriaSystem.cs
+  - Assets/Scripts/Player/MorphogenesisVisualizer.cs
+  - Assets/Scripts/Player/OrganismStateVisualizer.cs
+  - Assets/Scripts/Player/PhenotypeSystem.cs
+  - Assets/Scripts/Player/PhenotypeType.cs
+  - Assets/Scripts/Player/ChemicalSignalSystem.cs
+  - Assets/Scripts/Rendering/MicroscopeModeManager.cs
+  - Assets/Scripts/Ecosystem/EcologicalDirector.cs
+  - Assets/Scripts/Ecosystem/GranOxigenacion.cs
+  - Assets/Scripts/Ecosystem/EcosystemEventScheduler.cs
+  - Assets/Scripts/Ecosystem/EcosystemPopulation.cs
+  - Assets/Scripts/Campaign/CampaignManager.cs
+  - Assets/Scripts/Campaign/MissionData.cs
+  - Assets/Scripts/UI/ProtobacteriaSelectUI.cs
+  - Assets/Scripts/UI/CounterVisualizationSystem.cs
+   
+  PASOS:
+  1. Crear carpeta Assets/Scripts/_Deprecated/
+  2. Mover cada script listado a _Deprecated/
+  3. Buscar y eliminar todos los 'using' statements y
+     GetComponent<> que referencien esos scripts en otros archivos
+  4. Buscar y limpiar referencias en la escena SampleScene.unity
+  5. Compilar y reportar cualquier error restante con su causa
+   
+  Al terminar: lista los archivos que quedaron con errores
+  y qué referencia específica los causó.
+  
+
+□  Proyecto compila sin errores
+□  Carpeta _Deprecated/ creada con los scripts movidos
+□  No hay referencias rotas en otros scripts
+
+  PROMPT 0.2     Nueva Estructura de Carpetas
+Objetivo: Crear la estructura de carpetas del nuevo proyecto con README descriptivos en cada carpeta nueva.
+Criterio de éxito: Las carpetas existen. El proyecto sigue compilando.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Proyecto Protogenesis: Primordia. El prompt 0.1 ya
+  está hecho — el proyecto compila limpio.
+   
+  OBJETIVO: Crear la siguiente estructura de carpetas nuevas
+  en Assets/Scripts/ y Assets/Prefabs/:
+   
+  Assets/Scripts/
+    Views/          # ViewManager, InteriorView, ExteriorView
+    Interior/       # NucleusPanel, OrganelleInstaller, AtmosphereParticles
+    Exterior/       # ExteriorMap, FogOfWar, ResourceNode, MoleculeSecretor
+    Specialization/ # SpecializationTracker, SpecializationTree, SpecializationUI
+    Legacy/         # LegacySystem, LegacyUnit
+   
+  Assets/Prefabs/
+    Organelles/     # ya existe — dejar como está
+    Units/          # ya existe — dejar como está
+    Interior/       # NUEVO — prefabs de vista interior
+    Exterior/       # NUEVO — prefabs de mapa exterior
+    UI/             # NUEVO — prefabs de panels UI
+   
+  En cada carpeta NUEVA de Scripts, crear un archivo README.txt
+  con una sola línea describiendo su contenido.
+   
+  También agregar al EventBus.cs existente estos nuevos eventos
+  al final del archivo (sin modificar los existentes):
+   
+  // ── Primordia: Primordia events ─────────────────────────
+  public static event Action<ViewType> OnViewChanged;
+  public static event Action<string> OnOrganelleInstalled;
+  public static event Action<string> OnOrganelleRemoved;
+  public static event Action<string> OnSpecializationConsolidated;
+  public static event Action OnLegacyTriggered;
+  public static event Action<string, float> OnResourceChanged;
+  public static event Action<string> OnCellDeath;
+  public static event Action<bool> OnVictory; // true = local player wins
+   
+  Agregar también el enum ViewType en un archivo nuevo:
+  Assets/Scripts/Views/ViewType.cs
+  namespace Protogenesis.Views {
+    public enum ViewType { Interior, Exterior }
+  }
+  
+
+□  Carpetas nuevas creadas
+□  README.txt en cada carpeta nueva
+□  EventBus.cs actualizado con nuevos eventos
+□  ViewType.cs creado
+
+  PROMPT 0.3     Adaptar ResourceManager a 4 Recursos
+Objetivo: Reescribir ResourceManager.cs para manejar los 4 recursos del nuevo juego manteniendo el patrón de eventos del sistema existente.
+Criterio de éxito: Produce() y Consume() funcionan para los 4 recursos. Los eventos se disparan correctamente.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Proyecto Protogenesis: Primordia.
+  El ResourceManager.cs actual maneja: ATP, Biomasa, Glucosa,
+  Nitrógeno, Oxígeno, Toxinas, Temperatura.
+  Necesito adaptarlo para el nuevo sistema.
+   
+  OBJETIVO: Reescribir Assets/Scripts/Core/ResourceManager.cs
+  manteniendo el patrón Singleton y el sistema de eventos.
+   
+  NUEVOS RECURSOS (solo estos 4):
+    ATP         float  máx 500   // moneda energética universal
+    AminoAcids  float  máx 200   // síntesis de orgánulos y unidades
+    Nucleotides float  máx 200   // ARN y señalización
+    Lipids      float  máx 200   // membrana y energía alternativa
+   
+  MÉTODOS REQUERIDOS:
+    bool Consume(string resource, float amount)
+      // retorna false si no hay suficiente, no descuenta
+    void Produce(string resource, float amount)
+      // suma hasta el máximo, nunca supera
+    bool HasEnough(string resource, float amount)
+    float Get(string resource)
+    float GetPercent(string resource) // 0.0 a 1.0
+    float TotalResourceScore          // suma normalizada de los 4
+   
+  EVENTOS (usar EventBus.OnResourceChanged ya agregado):
+    Disparar OnResourceChanged(resourceName, newValue)
+    cada vez que un recurso cambie.
+   
+    Disparar un nuevo evento OnResourceCritical(resourceName)
+    cuando cualquier recurso caiga bajo el 10% de su máximo.
+    Agregar OnResourceCritical a EventBus.cs.
+   
+  VALORES INICIALES al empezar partida:
+    ATP = 50, AminoAcids = 30, Nucleotides = 20, Lipids = 20
+   
+  Buscar y actualizar todos los archivos que llamen al
+  ResourceManager viejo para que usen el nuevo API.
+  Si hay conflictos irresolubles, comentar la línea y
+  agregar // TODO: actualizar para nuevo ResourceManager
+  
+
+□  ResourceManager compila con los 4 recursos
+□  Produce() y Consume() funcionan con validación
+□  Eventos se disparan al cambiar recursos
+□  OnResourceCritical funciona al 10%
+
+  PROMPT 0.4     StressSystem desde InstabilitySystem
+Objetivo: Adaptar InstabilitySystem.cs al nuevo StressSystem.cs con los 8 factores de stress y los 5 umbrales del GDD.
+Criterio de éxito: El stress sube y baja según las condiciones. Los umbrales disparan eventos correctamente.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: El proyecto tiene InstabilitySystem.cs que mide
+  inestabilidad del sistema. Voy a adaptarlo como StressSystem.cs
+  para el nuevo juego.
+   
+  OBJETIVO: Crear Assets/Scripts/Core/StressSystem.cs
+  copiando la base de InstabilitySystem.cs y adaptándola.
+   
+  PROPIEDADES:
+    float CurrentStress  // 0 a 100
+    StressLevel Level    // enum: Stable / Functional / Deteriorating / Crisis / Collapse
+   
+  enum StressLevel { Stable, Functional, Deteriorating, Crisis, Collapse }
+   
+  UMBRALES:
+    0–20  → Stable       (síntesis ×1.2)
+    21–50 → Functional   (velocidad base)
+    51–75 → Deteriorating (síntesis ×0.5)
+    76–90 → Crisis       (solo procesos de supervivencia)
+    91–100→ Collapse     (dispara DeathSystem)
+   
+  FACTORES QUE SUBEN EL STRESS (evaluados cada 0.5s):
+    +8/seg  si temperatura del tile exterior > 80°C
+    +5/seg  si pH del tile exterior < 5 o > 9
+    +5/seg  si ATP = 0 por más de 5 segundos seguidos
+    +10/seg si HP de membrana < 30
+    +4/seg  si toxicidad del tile > 70
+    +6/seg  si ROS activos en tile sin quelante
+    +6 inmediato al recibir señal hostil (suscribirse a EventBus)
+    +15 inmediato si ARN principal degradado
+   
+  FACTORES QUE BAJAN EL STRESS (evaluados cada 0.5s):
+    -3/seg  si metabolismo activo (ATP > 50, pH 6-8)
+    -2/seg  si membrana intacta (HP membrana > 70)
+    -1/seg  si hay orgánulo estructural activo
+    -2/seg  si ARN estable (stress < 30 durante 10s seguidos)
+    -1/seg  si temperatura óptima (40-60°C) sostenida
+   
+  EVENTOS (agregar a EventBus.cs):
+    OnStressLevelChanged(StressLevel newLevel)
+    OnStressCollapse() — dispara DeathSystem
+   
+  Mover InstabilitySystem.cs a _Deprecated/.
+  Actualizar cualquier referencia a InstabilitySystem en otros scripts.
+  
+
+□  StressSystem.cs creado y compilando
+□  Los 8 factores de aumento funcionan
+□  Los 5 factores de reducción funcionan
+□  Los umbrales disparan eventos correctamente
+
+
+
+  ⬛  FASE 1  —  DOBLE VISTA — TAB TOGGLE  
+El sistema más crítico del juego. Si las dos vistas no funcionan bien, todo lo demás falla. Dos cámaras en la misma escena, cada una con su capa de Unity, alternando con Tab sin cargar escenas ni perder estado.
+
+  PROMPT 1.1     ViewManager — Dos Cámaras, Tab Toggle
+Objetivo: Crear el sistema de doble vista. Tab alterna entre interior y exterior. Ambas cámaras activas en la escena simultáneamente.
+Criterio de éxito: Tab alterna entre las dos vistas. La consola muestra el cambio. No hay errores.
+  Este es el prompt más importante de toda la implementación. No continuar con los siguientes hasta que esto funcione perfectamente.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Proyecto Protogenesis: Primordia.
+  Fases 0.1–0.4 completadas. El proyecto compila limpio.
+   
+  OBJETIVO: Implementar el sistema de doble vista.
+  Dos cámaras en la misma escena Unity, cada una renderizando
+  solo su propia capa. Tab las alterna.
+   
+  PASO 1 — CAPAS DE UNITY:
+  Agregar estas capas en Edit > Project Settings > Tags and Layers:
+    Layer 8: 'Interior'
+    Layer 9: 'Exterior'
+   
+  PASO 2 — SETUP DE CÁMARAS EN LA ESCENA:
+  Crear un GameObject vacío llamado 'ViewSystemRoot'.
+  Bajo ViewSystemRoot, crear dos cámaras:
+   
+  CameraInterior:
+    - Camera.clearFlags = SolidColor
+    - Camera.backgroundColor = #0A0A0F (casi negro)
+    - Camera.cullingMask = solo capa 'Interior'
+    - Camera.orthographic = true, orthographicSize = 5
+    - Camera.depth = 0
+    - Posición: (0, 0, -10)
+    - Habilitada por defecto (vista inicial)
+   
+  CameraExterior:
+    - Camera.clearFlags = SolidColor
+    - Camera.backgroundColor = #1A3A4A (azul-marino oscuro)
+    - Camera.cullingMask = solo capa 'Exterior'
+    - Camera.orthographic = true, orthographicSize = 15
+    - Camera.depth = 0
+    - Deshabilitada por defecto
+   
+  PASO 3 — ViewManager.cs:
+  Crear Assets/Scripts/Views/ViewManager.cs
+   
+  namespace Protogenesis.Views {
+    public class ViewManager : MonoBehaviour {
+      public static ViewManager Instance { get; private set; }
+      public ViewType CurrentView { get; private set; } = ViewType.Interior;
+   
+      [SerializeField] Camera cameraInterior;
+      [SerializeField] Camera cameraExterior;
+   
+      void Awake() { /* singleton */ }
+   
+      void Update() {
+        if (Input.GetKeyDown(KeyCode.Tab))
+          SwitchView();
+      }
+   
+      public void SwitchView() {
+        if (CurrentView == ViewType.Interior)
+          SetView(ViewType.Exterior);
+        else
+          SetView(ViewType.Interior);
+      }
+   
+      public void SetView(ViewType view) {
+        CurrentView = view;
+        cameraInterior.enabled = (view == ViewType.Interior);
+        cameraExterior.enabled = (view == ViewType.Exterior);
+        EventBus.OnViewChanged?.Invoke(view);
+        Debug.Log($'[ViewManager] Vista: {view}');
+      }
+    }
+  }
+   
+  PASO 4 — ASIGNAR EN LA ESCENA:
+  Agregar ViewManager como componente de ViewSystemRoot.
+  Asignar CameraInterior y CameraExterior en el Inspector.
+   
+  PASO 5 — PRUEBA:
+  Crear un cubo simple en capa 'Interior' y un quad en capa 'Exterior'.
+  Verificar que Tab muestra uno u otro pero nunca los dos juntos.
+  
+
+□  Tab alterna entre las dos vistas
+□  Interior solo muestra objetos en capa 'Interior'
+□  Exterior solo muestra objetos en capa 'Exterior'
+□  EventBus.OnViewChanged se dispara al cambiar
+
+  PROMPT 1.2     ViewTransition — Fade entre Vistas
+Objetivo: Agregar una transición visual de 0.3s al cambio de vista. Panel negro que hace fade out/in. Bloqueo de Tab durante la transición.
+Criterio de éxito: El cambio de vista tiene fade visible. No se puede cambiar de vista dos veces seguidas rápido.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: ViewManager.cs ya existe y funciona (prompt 1.1).
+   
+  OBJETIVO: Agregar transición visual al cambio de vista.
+   
+  Crear Assets/Scripts/Views/ViewTransition.cs
+   
+  MECÁNICA:
+    - ViewManager llama ViewTransition.DoTransition(Action onMidpoint)
+    - La coroutine:
+      1. Fade IN de un panel negro (0 → 1 alpha en 0.15s)
+      2. Llama onMidpoint() — aquí ViewManager cambia la cámara activa
+      3. Fade OUT del panel negro (1 → 0 alpha en 0.15s)
+    - Mientras hay transición activa: Tab no hace nada
+      (agregar bool _transitioning en ViewManager)
+   
+  UI PANEL:
+    - Canvas con renderMode = ScreenSpaceOverlay
+    - Panel negro (Image) que ocupa toda la pantalla
+    - CanvasGroup para controlar el alpha
+    - Nombre: 'TransitionPanel'
+   
+  INDICADOR DE VISTA ACTUAL:
+    En el mismo Canvas, esquina superior izquierda:
+    - Text (o TextMeshPro) que muestra:
+      '🔬  INTERIOR' cuando está en vista interior
+      '🗺  EXTERIOR' cuando está en vista exterior
+    - Al cambiar: pequeña animación de scale punch (1→1.3→1 en 0.2s)
+    - Siempre visible, en ambas vistas
+    - Se suscribe a EventBus.OnViewChanged para actualizarse
+   
+  Modificar ViewManager.SwitchView() para llamar a
+  ViewTransition.DoTransition() en lugar de cambiar la cámara
+  directamente.
+  
+
+□  Fade visible al cambiar de vista
+□  Tab bloqueado durante la transición
+□  Indicador de vista visible en esquina superior izquierda
+
+  PROMPT 1.3     PersistentHUD — Recursos en Ambas Vistas
+Objetivo: HUD que permanece visible en ambas vistas mostrando los 4 recursos, HP, balance de ATP y la vista actual.
+Criterio de éxito: Los recursos se actualizan en tiempo real. El HUD es visible tanto en interior como en exterior.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Proyecto Protogenesis: Primordia.
+  ViewManager (1.1), ViewTransition (1.2) y ResourceManager (0.3)
+  ya están funcionando.
+   
+  OBJETIVO: Crear el HUD persistente que se ve en ambas vistas.
+   
+  Crear Assets/Scripts/UI/PersistentHUD.cs
+   
+  El Canvas debe tener renderMode = ScreenSpaceOverlay
+  para que no dependa de ninguna cámara específica.
+   
+  ESQUINA SUPERIOR DERECHA — PANEL DE RECURSOS:
+    Fondo semitransparente oscuro (#0D0D0D, alpha 0.7)
+    4 filas, una por recurso:
+    [ícono] [nombre] [barra de progreso] [valor / máximo]
+   
+    ATP:         ícono ⚡  color amarillo  #FFD700
+    AminoAcids:  ícono 🔵  color azul      #4A90D9
+    Nucleotides: ícono 🟢  color verde     #5DBB63
+    Lipids:      ícono 🟡  color dorado    #DAA520
+   
+    Cuando un recurso < 10% del máximo:
+      - El ícono parpadea (alpha 1→0.3→1, periodo 0.5s)
+      - La barra se vuelve roja
+   
+  ESQUINA INFERIOR IZQUIERDA — BALANCE DE ATP:
+    Texto que muestra '+X.X ATP/seg' en verde
+    o '-X.X ATP/seg' en rojo
+    Se actualiza cada 0.5 segundos
+    Muestra el balance neto: producción - consumo pasivo
+   
+  ESQUINA INFERIOR DERECHA — HP DE CÉLULA:
+    Barra de HP de la célula base
+    Color: verde (>50%) → naranja (20-50%) → rojo (<20%)
+    Número encima: '87 / 100'
+   
+  DATOS:
+    - Suscribirse a EventBus.OnResourceChanged para recursos
+    - Suscribirse a EventBus.OnResourceCritical para parpadeo
+    - HP de célula: referenciar desde un componente CellHP.cs
+      que crearás como stub simple ahora:
+      public class CellHP : MonoBehaviour {
+        public static CellHP Instance;
+        public float CurrentHP = 100f;
+        public float MaxHP = 100f;
+      }
+    - Balance ATP: calcularlo en PersistentHUD con un running
+      average de los últimos 2 segundos de cambios en ATP
+  
+
+□  HUD visible en vista interior
+□  HUD visible en vista exterior
+□  Recursos se actualizan en tiempo real
+□  Parpadeo funciona al llegar al 10%
+□  Balance ATP muestra positivo/negativo correctamente
+
+
+
+  ⬛  FASE 2  —  VISTA INTERIOR JUGABLE  
+El interior de la célula como ciudad. Núcleo clickeable, orgánulos visibles que aparecen al instalarse, partículas de moléculas flotando en todas direcciones. El jugador tiene que sentir que está adentro de algo vivo.
+
+  PROMPT 2.1     AtmosphereParticles — Moléculas Flotantes
+Objetivo: Sistema de partículas que simula la atmósfera molecular del interior celular. Reactivo al estado de recursos.
+Criterio de éxito: Partículas visibles en la vista interior moviéndose de forma orgánica. Cambian según los recursos disponibles.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Proyecto Protogenesis: Primordia.
+  Vista interior activa (cámara en capa 'Interior').
+  ResourceManager con 4 recursos funcionando.
+   
+  OBJETIVO: Crear el sistema de partículas del interior celular.
+  El objetivo estético es: 'autopista molecular viva'.
+  Todo se mueve. Hay partículas de distintos tamaños.
+  El color dominante cambia según el recurso más abundante.
+   
+  Crear Assets/Scripts/Interior/AtmosphereParticles.cs
+   
+  IMPLEMENTACIÓN CON PARTICLE SYSTEM DE UNITY:
+  Crear 3 Particle Systems en la capa 'Interior',
+  hijos de un GameObject 'AtmosphereParticles':
+   
+  SmallParticles (iones / agua):
+    - maxParticles: 120
+    - startSize: 0.04–0.08 (random)
+    - startSpeed: 0.8–2.0
+    - startLifetime: 3–6 segundos
+    - shape: Circle radius 4.5 (dentro del interior celular)
+    - startColor: blanco (#FFFFFF) alpha 0.4
+    - simulationSpace: World
+    - Noise module: frequency 0.5, strength 0.3 (movimiento browniano)
+   
+  MediumParticles (aminoácidos):
+    - maxParticles: 50
+    - startSize: 0.12–0.18
+    - startSpeed: 0.3–0.8
+    - startLifetime: 5–10 segundos
+    - shape: Circle radius 4.0
+    - startColor: azul (#4A90D9) alpha 0.5
+    - Noise module: frequency 0.3, strength 0.2
+   
+  LargeParticles (vesículas):
+    - maxParticles: 20
+    - startSize: 0.20–0.30
+    - startSpeed: 0.1–0.3
+    - startLifetime: 8–15 segundos
+    - shape: Circle radius 3.5
+    - startColor: dorado (#DAA520) alpha 0.6
+    - Noise module: frequency 0.2, strength 0.15
+   
+  REACTIVIDAD A RECURSOS:
+  Suscribirse a EventBus.OnResourceChanged.
+  Cada vez que cambie un recurso, actualizar el color dominante
+  del sistema de partículas correspondiente:
+    ATP > 60% del máximo: SmallParticles startColor = amarillo
+    AminoAcids > 60%: MediumParticles más brillantes (alpha 0.8)
+    Cualquier recurso < 20%: ese sistema de partículas se
+    vuelve gris oscuro y más lento (startSpeed × 0.4)
+   
+  Todo en capa 'Interior'. Orden de renderizado: -1 (fondo).
+  
+
+□  Partículas visibles en vista interior
+□  3 tamaños distintos con movimiento browniano
+□  Color cambia según recursos en tiempo real
+
+  PROMPT 2.2     Núcleo Clickeable y NucleusPanel
+Objetivo: El núcleo de la célula es el centro de comando. Click abre un panel con 3 pestañas. No pausa el juego.
+Criterio de éxito: Click en el núcleo abre el panel. Las 3 pestañas son navegables. El juego sigue corriendo con el panel abierto.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Vista interior con partículas funcionando (2.1).
+   
+  OBJETIVO: El núcleo de la célula y su panel de comando.
+   
+  NÚCLEO (GameObject en capa 'Interior'):
+    Nombre: 'CellNucleus'
+    Sprite: círculo simple, diámetro 1.5u, color #6A0DAD (violeta oscuro)
+    Posición: (0, 0, 0) — centro exacto de la vista interior
+    SpriteRenderer sortingOrder: 10 (sobre las partículas)
+    Animación idle: rotación lenta 5°/segundo en Update()
+   
+    Hover: cuando el mouse está sobre el núcleo,
+    escala sube a (1.15, 1.15, 1) con Lerp suave
+    (restaurar a (1,1,1) al salir del hover)
+   
+    Click: abrir/cerrar NucleusPanel
+    Usar OnMouseDown() o IPointerClickHandler
+   
+  NUCLEUSPANEL (Assets/Scripts/Interior/NucleusPanel.cs):
+    Canvas hijo del GameObject 'NucleusPanel', en capa 'Interior'
+    renderMode = WorldSpace
+    Posición: (3.5, 0, 0) — a la derecha del núcleo
+    Tamaño: 300x400 pixels world-space
+    Fondo: #0D1B2A alpha 0.92
+    Borde: línea de 2px color #2471A3
+   
+    Header: 'NÚCLEO' en texto blanco bold
+    Botón X para cerrar en esquina superior derecha
+   
+    3 TABS (botones que cambian el panel activo):
+    Tab 1 — ⚗️ SÍNTESIS:
+      ScrollView con lista de orgánulos disponibles.
+      Por ahora: lista vacía con texto 'Sin orgánulos disponibles'.
+      Cada ítem tendrá: nombre, costo, botón Instalar.
+      (se llena en el prompt 2.3)
+   
+    Tab 2 — 🧬 GENES:
+      Lista de orgánulos instalados con Toggle ON/OFF.
+      Por ahora: 'No hay orgánulos instalados'.
+      Abajo: texto 'Consumo ATP total: 0.0/seg'
+      (se llena en el prompt 2.4)
+   
+    Tab 3 — 📊 ESTADO:
+      4 barras verticales con labels:
+      HP Membrana, ATP%, Stress, Temperatura
+      Los valores se leen de CellHP, ResourceManager y StressSystem.
+      Si alguna barra está en rojo: el tab muestra un ícono ⚠ rojo.
+   
+    El panel NO pausa el juego. Time.timeScale sigue en 1.
+    El panel es visible solo en Vista Interior.
+    Suscribirse a EventBus.OnViewChanged para ocultarlo
+    automáticamente al cambiar a Vista Exterior.
+  
+
+□  Núcleo visible en vista interior con rotación idle
+□  Hover cambia la escala del núcleo
+□  Click abre y cierra el panel
+□  3 pestañas navegables
+□  El juego no se pausa con el panel abierto
+
+  PROMPT 2.3     OrganelleInstaller — 6 Orgánulos Base
+Objetivo: Sistema de instalación de orgánulos. Al instalar uno, aparece visualmente en el interior y sus efectos se activan.
+Criterio de éxito: Los 6 orgánulos se pueden instalar desde el panel. Cada uno aparece en el interior al instalarse. Los efectos en ResourceManager/StressSystem son visibles.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: NucleusPanel funcionando (2.2).
+  ResourceManager y StressSystem activos.
+   
+  OBJETIVO: Sistema de instalación de orgánulos.
+   
+  Crear Assets/Scripts/Interior/OrganelleInstaller.cs
+   
+  LÓGICA DE INSTALACIÓN:
+  1. ValidarRecursos(): verificar que hay suficiente en ResourceManager
+  2. ResourceManager.Consume() para pagar el costo
+  3. InstanciarVisual(): crear el GameObject del orgánulo en la
+     posición asignada de la grilla
+  4. ActivarEfecto(): el orgánulo empieza a aplicar su efecto
+  5. EventBus.OnOrganelleInstalled?.Invoke(organelleId)
+  6. Registrar en lista _installedOrganelles
+   
+  GRILLA DE POSICIONES (12 slots predefinidos):
+    Zona energía (cerca del núcleo, radio 1.5u): 4 slots
+    Zona síntesis (radio medio 2.5u): 4 slots
+    Zona membrana (cerca del borde, radio 3.5u): 4 slots
+    Si no hay slot libre: mostrar error en el panel
+   
+  LOS 6 ORGÁNULOS DEL MINI-JUEGO:
+   
+  1. Mitocondria
+     Zona: Energía  Costo: 20 ATP + 10 AminoAcids
+     Efecto: +3 ATP/seg (llamar a MetabolismEngine o ResourceManager.Produce)
+     Costo pasivo: -0.5 ATP/seg mientras está ON
+     Visual: óvalo #C0392B con animación de pulso (scale 1→1.1→1, 2s)
+   
+  2. Ribosoma
+     Zona: Síntesis  Costo: 15 ATP + 15 AminoAcids
+     Efecto: habilita síntesis de proteínas (flag booleano)
+     Costo pasivo: -0.3 ATP/seg
+     Visual: dos círculos superpuestos #DAA520, vibración rápida
+   
+  3. Vacuola
+     Zona: Membrana  Costo: 10 ATP + 10 Lipids
+     Efecto: +50 a máximo de AminoAcids y Lipids
+     Costo pasivo: -0.2 ATP/seg
+     Visual: burbuja translúcida #85C1E9 alpha 0.5
+   
+  4. Flagelo (solo disponible si SpecializationTracker detecta rama Bacteria)
+     Zona: Membrana  Costo: 25 ATP + 20 AminoAcids
+     Efecto: +80% velocidad de movimiento en exterior
+     Costo pasivo: -0.8 ATP/seg
+     Visual: línea ondulada en el borde del interior #27AE60
+   
+  5. Gránulo Azurófilo (disponible si rama Neutrófilo detectada)
+     Zona: Membrana  Costo: 20 ATP + 15 AminoAcids + 10 Nucleotides
+     Efecto: habilita secretar unidad Gránulo en exterior
+     Costo pasivo: -0.6 ATP/seg
+     Visual: esfera pequeña #E74C3C con parpadeo leve
+   
+  6. Lisosoma
+     Zona: Síntesis  Costo: 20 ATP + 15 AminoAcids
+     Efecto: +50% daño digestivo de la célula. Counter contra infecciones.
+     Costo pasivo: -0.4 ATP/seg
+     Visual: óvalo pequeño #8E44AD
+   
+  ANIMACIÓN DE APARICIÓN:
+    Al instalar: scale 0 → 1 en 0.4s con EaseOutBack
+    Partículas breves de 'materialización' (burst de 10 partículas)
+   
+  Actualizar la Tab SÍNTESIS del NucleusPanel para mostrar
+  estos 6 orgánulos con sus costos y el botón Instalar.
+  Deshabilitar el botón si no hay recursos suficientes.
+  Mostrar checkmark verde en orgánulos ya instalados.
+  
+
+□  6 orgánulos listados en el panel de síntesis
+□  Instalación consume recursos correctamente
+□  Orgánulo aparece visualmente al instalarse
+□  Efectos en ResourceManager son visibles en el HUD
+□  Animación de aparición funciona
+
+  PROMPT 2.4     GeneManager Adaptado — Toggle ON/OFF
+Objetivo: La pestaña Genes del NucleusPanel muestra los orgánulos instalados con toggle. Apagar un gen libera su costo ATP pasivo.
+Criterio de éxito: Apagar la Mitocondria reduce el consumo pasivo. El orgánulo se degrada visualmente en 30 ticks si no se reactiva.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: OrganelleInstaller funcionando (2.3).
+  GeneManager.cs existe en el proyecto — adaptar.
+   
+  OBJETIVO: Adaptar GeneManager.cs para la regulación génica
+  del nuevo juego y conectarlo con el NucleusPanel.
+   
+  COMPORTAMIENTO DEL GEN ON/OFF:
+    ON: orgánulo activo, efecto activo, costo ATP pasivo activo
+    OFF: efecto pausado inmediatamente, costo pasivo = 0
+         si sigue OFF por 30 ticks (tiempo configurable):
+         el orgánulo se 'degrada' — desaparece del interior
+         y el slot queda libre para reinstalar
+         (los recursos NO se devuelven — se perdieron al construir)
+   
+    Si se reactiva antes de los 30 ticks:
+    sin costo de reinstalación — el orgánulo 'se recupera'
+   
+  VISUAL DE DEGRADACIÓN:
+    Cuando un gen pasa a OFF:
+    - El sprite del orgánulo se vuelve gris y semi-transparente
+    - Un texto '30..29..28..' aparece sobre él (countdown)
+    - Al llegar a 0: el sprite se desvanece y desaparece
+   
+  ACTUALIZAR TAB GENES DEL NUCLEUSPANEL:
+    Mostrar lista de todos los orgánulos instalados.
+    Por cada uno: Toggle UI (checkbox) + nombre + costo ATP/seg.
+    Abajo de la lista: texto actualizado en tiempo real:
+    'Consumo total: X.X ATP/seg'
+    'Producción: Y.Y ATP/seg'
+    'Balance: +Z.Z ATP/seg' en verde o '-Z.Z ATP/seg' en rojo
+   
+  GeneManager debe exponer:
+    bool IsActive(string organelleId)
+    void SetGeneActive(string organelleId, bool active)
+    float GetTotalPassiveCost() // suma de todos los ON
+  
+
+□  Toggle ON/OFF funciona en la pestaña Genes
+□  Apagar un gen suspende su costo ATP inmediatamente
+□  Countdown visual de 30 ticks al apagar
+□  El orgánulo desaparece al llegar a 0
+□  Balance ATP se actualiza en tiempo real en el panel
+
+
+
+  ⬛  FASE 3  —  VISTA EXTERIOR JUGABLE  
+El campo de batalla en pixel art. Mapa con niebla de guerra, célula del jugador movible, nodos de recursos distribuidos y el zoom que refleja el tamaño real del organismo.
+
+  PROMPT 3.1     ExteriorMap + FogOfWar
+Objetivo: Mapa 64×64 con tiles de distintos tipos y niebla de guerra que se revela según la posición de la célula del jugador.
+Criterio de éxito: El mapa está visible con niebla de guerra. La zona alrededor del jugador está revelada.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Vista exterior activa (cámara en capa 'Exterior').
+   
+  OBJETIVO: Mapa exterior con Tilemap y niebla de guerra.
+   
+  MAPA (capa 'Exterior'):
+    Tilemap 2D, 64×64 tiles, tile size 1u × 1u
+    Usar Tilemap + Grid de Unity
+   
+    TIPOS DE TILE (crear TileData ScriptableObject por tipo):
+    TileFluid:    color #1A3A4A — movimiento normal
+    TileNutrient: color #2D6A4F — zona de farmeo (más claro)
+    TileMatrix:   color #4A4A3A — matriz extracelular (slow ×0.5)
+    TileWall:     color #1A1A0A — borde, infranqueable
+   
+    GENERACIÓN DEL MAPA:
+    - Borde exterior (2 tiles): TileWall
+    - Interior: 70% TileFluid, 20% TileNutrient, 10% TileMatrix
+    - Los TileNutrient se generan en clusters de 3–6 tiles
+    - Las zonas de inicio del jugador (esquinas) son siempre TileFluid
+   
+  NIEBLA DE GUERRA (Assets/Scripts/Exterior/FogOfWar.cs):
+    Implementación con Texture2D overlay:
+    - Crear un Quad que cubra todo el mapa (capa 'Exterior')
+    - Material con shader 'Unlit/Transparent'
+    - Texture2D de 64×64 píxeles, inicializada en negro (#000000)
+    - Actualizar la textura cada 0.1s:
+      * En la posición de cada unidad propia: dibujar un
+        círculo de radio = fogRevealRadius en alpha 0
+        (transparente = revelado)
+      * El resto queda en negro alpha 0.85
+    - La zona revelada es PERMANENTE (no se vuelve a oscurecer)
+   
+    Radios de revelación:
+    - Célula del jugador: 8 tiles
+    - Vesícula exploratoria: 4 tiles
+    - Otras unidades: 3 tiles
+   
+    FogOfWar expone:
+    bool IsRevealed(Vector2Int tilePos)
+    void RegisterUnit(Transform unit, float revealRadius)
+    void UnregisterUnit(Transform unit)
+  
+
+□  Mapa 64×64 visible con 4 tipos de tile
+□  Niebla de guerra cubre el mapa al inicio
+□  La zona alrededor del origen del jugador está revelada
+□  IsRevealed() retorna correctamente
+
+  PROMPT 3.2     PlayerCellExterior — Célula Movible
+Objetivo: La célula del jugador en el exterior. Click derecho para mover, absorción de recursos al acercarse a nodos.
+Criterio de éxito: La célula se mueve al punto de click. Revela la niebla de guerra a su alrededor. Absorbe recursos al tocar un nodo.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Mapa exterior con FogOfWar funcionando (3.1).
+   
+  OBJETIVO: Célula del jugador en la vista exterior.
+   
+  Crear Assets/Scripts/Exterior/PlayerCellExterior.cs
+  capa 'Exterior', con Rigidbody2D y CircleCollider2D.
+   
+  VISUAL:
+    Sprite: círculo con anillo exterior (membrana)
+    Radio exterior: 0.6u, color #2471A3 (azul)
+    Radio interior: 0.45u, color #D6EAF8 (azul claro translúcido)
+    SpriteRenderer sortingOrder: 5
+    Animación idle: pulse scale (1→1.04→1, periodo 3s)
+   
+    Cuando HP < 30%: el sprite parpadea levemente en rojo
+   
+  MOVIMIENTO:
+    - Click derecho en el mapa: la célula se mueve hacia ese punto
+    - Usar Vector2.MoveTowards en FixedUpdate()
+    - Velocidad base: 2.0 u/seg
+    - Con Flagelo instalado (consultar OrganelleInstaller):
+      velocidad 3.5 u/seg
+    - En tile TileMatrix: velocidad × 0.5
+    - En tile TileWall: no puede entrar (el collider lo bloquea)
+   
+    INDICADOR DE DESTINO:
+    Al hacer click: instanciar un prefab 'MoveTarget' en el punto
+    (una X pequeña de color blanco alpha 0.6)
+    El MoveTarget desaparece al llegar o al hacer click en otro punto
+   
+  ABSORCIÓN DE RECURSOS:
+    - Radio de absorción: 0.8u desde el centro
+    - Verificar con OverlapCircle en FixedUpdate() qué ResourceNodes
+      están en el radio
+    - Para cada nodo en rango: transferir al ResourceManager
+      cantidad = node.ResourcePerSecond × Time.fixedDeltaTime
+    - Animación de absorción: partículas pequeñas van del nodo
+      al centro de la célula (Particle System simple, burst)
+   
+    - Registrar en FogOfWar con radio 8 al inicializar
+   
+  POSICIÓN INICIAL:
+    Esquina inferior izquierda del mapa (tile 4,4)
+    La rival AI empezará en esquina superior derecha (tile 60,60)
+  
+
+□  Célula visible en el mapa con sprite correcto
+□  Click derecho mueve la célula al destino
+□  La velocidad cambia en tiles de Matrix
+□  La niebla se revela alrededor de la célula
+□  La absorción de recursos funciona al acercarse a nodos
+
+  PROMPT 3.3     ResourceNode + ResourceNodeSpawner
+Objetivo: Nodos de recursos en el mapa con regeneración. El spawner los distribuye al inicio de la partida.
+Criterio de éxito: 8+ nodos visibles en el mapa. Los recursos se transfieren al acercarse. Los nodos se regeneran al agotarse.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: PlayerCellExterior funcionando (3.2).
+   
+  OBJETIVO: Nodos de recursos en el mapa exterior.
+   
+  Crear Assets/Scripts/Exterior/ResourceNode.cs
+   
+  PROPIEDADES:
+    string ResourceType    // 'ATP','AminoAcids','Nucleotides','Lipids'
+    float CurrentAmount    // inicializado en 60–100 aleatorio
+    float MaxAmount = 100
+    float RegenerationRate = 1.5f  // unidades por segundo
+    float ResourcePerSecond = 3.0f // transferencia al jugador al tocar
+   
+  VISUAL (capa 'Exterior'):
+    ATP/Glucosa:    hexágono amarillo #FFD700, tamaño 0.4u
+    AminoAcids:     esfera azul #4A90D9, tamaño 0.35u
+    Nucleotides:    forma helicoidal #5DBB63, tamaño 0.35u
+    Lipids:         gota dorada #DAA520, tamaño 0.38u
+   
+    Barra de cantidad flotante sobre el sprite
+    (Quad pequeño con Material de color sólido)
+    Al agotarse: sprite se oscurece (alpha 0.3)
+    Al regenerarse: sprite vuelve a brillantez normal
+   
+  COMPORTAMIENTO:
+    - En Update(): CurrentAmount += RegenerationRate × Time.deltaTime
+      (si CurrentAmount < MaxAmount)
+    - La transferencia la hace PlayerCellExterior (ya implementado)
+    - Cuando CurrentAmount llega a 0: 'nodo agotado'
+      el sprite se oscurece pero SIGUE regenerando
+   
+  Crear Assets/Scripts/Exterior/ResourceNodeSpawner.cs
+   
+  Al Start(), distribuir en el mapa:
+    8 nodos de ATP/Glucosa
+    6 nodos de AminoAcids
+    4 nodos de Nucleotides
+    4 nodos de Lipids
+   
+  REGLAS DE SPAWN:
+    - Distancia mínima entre nodos: 5 tiles
+    - Distancia mínima desde esquinas de jugador: 8 tiles
+    - Solo en tiles TileFluid o TileNutrient (no en Matrix ni Wall)
+    - Si no encuentra posición válida en 50 intentos: skip ese nodo
+  
+
+□  Nodos distribuidos en el mapa al inicio
+□  Barra de cantidad visible sobre cada nodo
+□  Nodos se agotan y regeneran correctamente
+□  Los recursos se transfieren al ResourceManager al acercarse
+
+  PROMPT 3.4     ZoomManager — 3 Niveles de Zoom
+Objetivo: Adaptar ZoomManager.cs para los 3 niveles de zoom del nuevo juego y el WorldSize de cada especialización.
+Criterio de éxito: El scroll wheel cambia el zoom. El zoom de la cámara exterior refleja el WorldSize de la especialización activa.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: ZoomManager.cs ya existe en el proyecto.
+  PlayerCellExterior y mapa funcionando.
+   
+  OBJETIVO: Adaptar ZoomManager para los 3 niveles de zoom
+  y el WorldSize por especialización.
+   
+  3 NIVELES DE ZOOM (para el mini-juego, solo exterior):
+   
+  Zoom CERCANO (default al entrar a exterior):
+    orthographicSize = worldSize × 200
+    Para Protocélula (worldSize 0.005): orthoSize = 1.0
+    La célula se ve grande, el mapa se ve pequeño
+   
+  Zoom MEDIO (scroll down una vez):
+    orthographicSize = worldSize × 500
+    Ves la célula y el entorno cercano (10 tiles alrededor)
+   
+  Zoom ALEJADO (scroll down dos veces):
+    orthographicSize = worldSize × 1200
+    Ves gran parte del mapa. Las células son puntos.
+   
+  WORLDSIZE POR ESPECIALIZACIÓN (leer de SpecializationTracker):
+    None / Protocelula: 0.005
+    Bacteria:           0.005
+    Arquea:             0.010
+    Cianobacteria:      0.008
+    Hongo:              0.050
+    Ameba:              0.300
+    Flagelado:          0.150
+    Ciliado:            0.150
+    Neutrofilo:         0.100
+    Macrofago:          0.100
+    CelulaNK:           0.100
+    CelulaB:            0.100
+    CelulaMadre:        0.200
+    Tardigrado:         500.0   // la transición es épica — lerp 5s
+    Volvox:             2.0
+    Paramecio:          0.150
+   
+  CÁMARA DE LA VISTA EXTERIOR sigue a PlayerCellExterior:
+    En LateUpdate(): 
+    transform.position = Vector3.Lerp(transform.position,
+      target.position + new Vector3(0,0,-10), Time.deltaTime × 5)
+   
+  SCROLL WHEEL:
+    Scroll up: zoom más cercano (hasta el mínimo)
+    Scroll down: zoom más alejado (hasta el máximo)
+    Transición: Lerp en 0.3s hacia el nuevo orthographicSize
+   
+  Al cambiar de especialización (suscribirse a
+  EventBus.OnSpecializationConsolidated):
+    Recalcular los 3 niveles de zoom con el nuevo worldSize
+    Transición automática al nuevo zoom base (0.5s)
+  
+
+□  Scroll wheel cambia entre 3 niveles de zoom
+□  La cámara sigue a la célula del jugador
+□  El zoom cambia al consolidar una especialización
+
+
+
+  ⬛  FASE 4  —  ECONOMÍA Y ESPECIALIZACIÓN  
+Conectar el interior con el exterior a través del ATP. El flujo metabólico tiene que ser visible y manejable. El sistema de especialización tiene que dar feedback claro al jugador sobre hacia dónde va.
+
+  PROMPT 4.1     MetabolismEngine — Flujo ATP Completo
+Objetivo: El flujo de ATP conecta todos los sistemas. Producción, consumo pasivo, crisis energética y colapso metabólico.
+Criterio de éxito: El balance ATP es visible en el HUD y cambia según los orgánulos activos. El colapso ocurre si el ATP se agota por 20 segundos.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: MetabolismEngine.cs ya existe. ResourceManager,
+  GeneManager y OrganelleInstaller funcionando.
+   
+  OBJETIVO: Adaptar MetabolismEngine.cs para el nuevo flujo de ATP.
+   
+  LOOP PRINCIPAL (evaluar cada 0.25s, mantener el intervalo existente):
+   
+  1. CALCULAR PRODUCCIÓN:
+     float production = 0.5f; // metabolismo basal siempre
+     production += organelles.GetActiveProductionTotal();
+     // Mitocondria: +3.0, Fotosíntesis si aplica: +2.0, etc.
+   
+  2. CALCULAR CONSUMO PASIVO:
+     float passiveCost = 0.5f; // mantenimiento de membrana
+     passiveCost += geneManager.GetTotalPassiveCost();
+   
+  3. APLICAR DELTA:
+     float delta = (production - passiveCost) × evalInterval;
+     if (delta > 0) ResourceManager.Produce('ATP', delta);
+     else ResourceManager.Consume('ATP', Mathf.Abs(delta));
+   
+  4. DISPARAR EventBus.OnATPBalance(float netPerSecond)
+     (agregar este evento a EventBus.cs)
+     El PersistentHUD lo usa para mostrar '+X/s' o '-X/s'
+   
+  CRISIS ENERGÉTICA:
+    Llevar un timer: _atpEmptyTimer
+    Cada frame que ATP == 0: _atpEmptyTimer += Time.deltaTime
+    Si _atpEmptyTimer > 5f: dispara EventBus.OnEnergyCrisis()
+      → StressSystem recibe +5/seg mientras dure
+      → PersistentHUD muestra alerta '⚠ CRISIS ATP' parpadeando
+    Si ATP vuelve a > 0: _atpEmptyTimer = 0, cancelar crisis
+   
+  COLAPSO METABÓLICO:
+    Si _atpEmptyTimer > 20f:
+    DeathSystem.TriggerDeath(DeathType.MetabolicCollapse)
+    (crear enum DeathType si no existe:
+    MetabolicCollapse, Lysis, Intoxication, Apoptosis, Freezing)
+   
+  AGREGAR A EventBus.cs:
+    public static event Action<float> OnATPBalance;
+    public static event Action OnEnergyCrisis;
+    public static event Action OnEnergyCrisisResolved;
+  
+
+□  El balance ATP es visible en el HUD como '+X/s' o '-X/s'
+□  La producción de la Mitocondria es visible
+□  Crisis energética activa alerta tras 5 segundos sin ATP
+□  Colapso metabólico ocurre tras 20 segundos sin ATP
+
+  PROMPT 4.2     SpecializationTracker + UI
+Objetivo: El sistema que detecta hacia qué especialización va el jugador según sus orgánulos y muestra el progreso.
+Criterio de éxito: Instalar el Flagelo sube la barra de Bacteria. Instalar Gránulo Azurófilo sube la barra de Neutrófilo. Al 60%: consolidación.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: OrganelleInstaller funcionando (2.3).
+  EventBus.OnOrganelleInstalled disparando correctamente.
+   
+  OBJETIVO: Sistema de seguimiento de especialización.
+   
+  Crear Assets/Scripts/Specialization/SpecializationTracker.cs
+   
+  Para el mini-juego: solo 2 especializaciones activas.
+  Las otras 14 se agregarán en iteraciones posteriores.
+   
+  TABLA DE PUNTOS POR ORGÁNULO:
+    Orgánulo instalado → qué rama sube cuánto
+   
+    Mitocondria     → Bacteria +10, Neutrofilo +10 (base compartida)
+    Ribosoma        → Bacteria +10, Neutrofilo +10 (base compartida)
+    Vacuola         → ninguna rama específica
+    Flagelo         → Bacteria +35 (orgánulo definitorio)
+    GranuloAzurofilo→ Neutrofilo +35 (orgánulo definitorio)
+    Lisosoma        → Neutrofilo +20, Ameba +15
+   
+  LÓGICA:
+    Al recibir EventBus.OnOrganelleInstalled(organelleId):
+    - Actualizar diccionario _scores[SpecializationType] += puntos
+    - Si alguna rama llega a 60+: consolidar esa especialización
+      _locked = true (las otras ramas ya no pueden crecer)
+    - Disparar EventBus.OnSpecializationConsolidated(specType)
+   
+  Crear Assets/Scripts/Specialization/SpecializationUI.cs
+   
+  UI: panel pequeño en esquina inferior izquierda del HUD,
+      siempre visible en ambas vistas.
+   
+    Antes de consolidar:
+    Ícono de la especialización con más puntos actualmente
+    Texto: 'Evolucionando hacia: [Bacteria] — 45%'
+    Barra de progreso azul (0 → 100%)
+   
+    Al consolidar:
+    Animación: la barra se llena, flash de color, texto cambia a:
+    '✓ [🦠 BACTERIA] CONSOLIDADO'
+    La barra queda llena y fija
+    Sonido de unlock (usar AudioSource.PlayOneShot si hay algún
+    audio clip disponible en el proyecto, si no dejar TODO: audio)
+  
+
+□  Instalar Flagelo sube la barra de Bacteria
+□  Instalar Gránulo sube la barra de Neutrófilo
+□  Al 60%: consolidación + animación de unlock
+□  EventBus.OnSpecializationConsolidated se dispara
+
+  PROMPT 4.3     LegacySystem — El Sistema de Legado
+Objetivo: Al consolidar la especialización, todas las unidades vivas se vuelven Legado: autónomas, permanentes, sin costo ATP.
+Criterio de éxito: Al consolidar Bacteria, los Flagelos existentes se vuelven autónomos con aura visual y dejan de necesitar órdenes del jugador.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: SpecializationTracker funcionando (4.2).
+  MoleculeSecretor y unidades funcionarán en Fase 5.
+  Implementar LegacySystem ahora para que esté listo.
+   
+  OBJETIVO: Sistema de Legado Biológico.
+  Al consolidar la especialización, las unidades vivas
+  se convierten en Legado permanente y autónomo.
+   
+  Crear Assets/Scripts/Legacy/LegacySystem.cs
+   
+  TRIGGER:
+    Suscribirse a EventBus.OnSpecializationConsolidated
+    Al recibirlo:
+    1. Buscar todas las unidades activas con tag 'PlayerUnit'
+    2. Para cada una: llamar unit.ConvertToLegacy()
+    3. Mostrar UI de notificación:
+       '⚡ LEGADO BIOLÓGICO ACTIVADO'
+       '${count} unidades se han vuelto autónomas permanentes'
+    4. Disparar EventBus.OnLegacyTriggered()
+   
+  MÉTODO ConvertToLegacy() en UnitBase.cs:
+    IsLegacy = true
+    // cambiar control de Directo a IA Autónoma
+    // el jugador pierde control individual de esta unidad
+    // la unidad sigue siendo 'del jugador' (no atacable por propias)
+   
+    VISUAL DIFERENCIADOR:
+    Agregar un SpriteRenderer secundario (hijo del sprite principal)
+    con un círculo de radio ligeramente mayor, color del arquetipo,
+    alpha 0.2, sortingOrder -1 (detrás del sprite principal)
+    Esto es el 'aura de Legado'
+   
+    IA AUTÓNOMA DEL LEGADO:
+    En Update() si IsLegacy:
+    - Si hay una unidad enemiga en radio 6u: moverla hacia ella y atacar
+    - Si no hay enemigos: patrullar en radio 4u alrededor de la célula base
+    - Si la célula base está siendo atacada (HP < 70%): ir a defenderla
+   
+    COSTO ATP: 0 (el Legado no consume ATP — es la recompensa)
+   
+  Agregar IsLegacy y ConvertToLegacy() a UnitBase.cs.
+  Agregar tag 'PlayerUnit' a los prefabs de unidades al crearlos.
+   
+  ESTADÍSTICA EN POST-MATCH:
+  Guardar en LegacySystem: int UnitsConvertedToLegacy
+  Se usará en la pantalla post-partida (prompt 5.7).
+  
+
+□  Al consolidar: unidades vivas se convierten en Legado
+□  Las unidades de Legado tienen aura visual
+□  Las unidades de Legado son autónomas (sin input del jugador)
+□  Las unidades de Legado no consumen ATP
+□  El Legado defiende la célula base si es atacada
+
+
+
+  ⬛  FASE 5  —  MINI-JUEGO 1V1 JUGABLE  
+Juntar todo en una partida completa. Bacteria vs Neutrófilo. Secretar unidades, combatir, aplicar eventos ambientales, IA rival, victoria y derrota. Este es el objetivo de las 2 semanas.
+
+  PROMPT 5.1     MoleculeSecretor — Secretar Unidades
+Objetivo: Sistema que crea unidades en el borde de la membrana exterior cuando el jugador ordena secretar.
+Criterio de éxito: Secretar una unidad consume ATP, crea el prefab en la membrana y la unidad aparece en el exterior.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Vista exterior con mapa y célula funcionando.
+  OrganelleInstaller funcionando — el Flagelo y el Gránulo están instalables.
+   
+  OBJETIVO: Sistema de secretar unidades desde la célula.
+   
+  Crear Assets/Scripts/Exterior/MoleculeSecretor.cs
+  componente de PlayerCellExterior.
+   
+  FLUJO DE SECRETAR:
+  1. El jugador presiona la tecla de secretar (ver más abajo)
+  2. MoleculeSecretor verifica que el orgánulo requerido está activo
+  3. Verifica que hay ATP suficiente para el costo
+  4. ResourceManager.Consume('ATP', cost)
+  5. Instanciar prefab de la unidad en la posición de la membrana:
+     spawnPoint = cellPosition + Random.insideUnitCircle.normalized × 0.8
+  6. La unidad aparece con animación de 'emerge' (scale 0→1 en 0.3s)
+  7. Registrar la unidad en FogOfWar con su radio de revelación
+   
+  TECLAS DE SECRETAR (para el mini-juego):
+    '1' → Secretar Flagelo Bacteriano (si Flagelo está instalado y ON)
+    '2' → Secretar Gránulo Azurófilo (si Gránulo está instalado y ON)
+    '3' → Secretar Vesícula Exploratoria (siempre disponible, 5 ATP)
+   
+    Si el orgánulo no está instalado o no hay ATP:
+    Mostrar mensaje breve en pantalla: 'Sin ATP' o 'Requiere: Flagelo'
+    El mensaje desaparece en 1.5 segundos
+   
+  UI DE SECRETAR (parte del PersistentHUD):
+    Barra inferior con los 3 slots de unidades:
+    [1 Flagelo — 8 ATP] [2 Gránulo — 6 ATP] [3 Vesícula — 5 ATP]
+    El slot se muestra en gris si no hay orgánulo o no hay ATP
+    El slot tiene un cooldown visual (0.5s entre secretar el mismo tipo)
+   
+    Las teclas son visibles incluso en Vista Interior
+    (el jugador puede secretar desde el interior — el sistema
+    usa la posición de PlayerCellExterior para el spawn)
+  
+
+□  Tecla 1 secreta un Flagelo (si está disponible)
+□  Tecla 2 secreta un Gránulo (si está disponible)
+□  Tecla 3 secreta una Vesícula exploratoria
+□  El costo ATP se consume correctamente
+□  La unidad aparece en el borde de la membrana exterior
+
+  PROMPT 5.2     Unidad: Flagelo Bacteriano
+Objetivo: Primera unidad de ataque del mini-juego. Control directo, alta velocidad, bajo HP.
+Criterio de éxito: El Flagelo se mueve al punto de click. Ataca unidades enemigas al hacer click sobre ellas.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: MoleculeSecretor funcionando (5.1).
+  UnitBase.cs y DamageSystem.cs existentes en el proyecto.
+   
+  OBJETIVO: Unidad Flagelo Bacteriano.
+   
+  Crear Assets/Scripts/Units/FlageloBacteriano.cs
+  hereda de UnitBase
+  capa 'Exterior', tag 'PlayerUnit'
+   
+  STATS:
+    MaxHP: 15
+    Speed: 4.0 u/seg
+    Damage: 5 por impacto
+    AttackRate: 1 ataque/segundo
+    AttackRange: 0.3u (cuerpo a cuerpo)
+    FogRevealRadius: 2.5 tiles
+    ControlType: Direct
+   
+  VISUAL:
+    Cuerpo: cápsula alargada #6A9FB5, tamaño 0.25×0.15u
+    Flagelo: LineRenderer con 4 puntos, color #4A7F95
+             El flagelo ondula: los puntos siguen un seno desfasado
+             frecuencia 3Hz, amplitud 0.05u
+    Sin movimiento: flagelo menos animado (amplitud 0.02u)
+    En movimiento: flagelo más activo (amplitud 0.08u)
+   
+  CONTROL DIRECTO:
+    Click derecho en el mapa → mover hacia ese punto
+    Click derecho sobre unidad con tag 'EnemyUnit' → atacar
+    Selección: click izquierdo en la unidad, se resalta con aro blanco
+    Puede seleccionarse múltiples Flagelos a la vez (Shift+click)
+   
+    Sin órdenes: orbitar la célula base en radio 2u
+   
+  ATAQUE:
+    Al llegar a AttackRange del target:
+    - Reproducir animación de 'picado' (move 0.1u hacia target y volver)
+    - DamageSystem.DealDamage(target, Damage)
+    - Esperar 1/AttackRate segundos antes del siguiente ataque
+   
+  MUERTE:
+    Al llegar a HP 0:
+    - Partículas azules (burst de 8 partículas pequeñas)
+    - Destruir el GameObject
+    - Unregistrar de FogOfWar
+  
+
+□  Flagelo aparece al secretar con tecla 1
+□  Click derecho lo mueve al destino
+□  Click derecho sobre enemigo lo hace atacar
+□  El flagelo ondula visualmente al moverse
+□  Al morir: partículas y desaparece
+
+  PROMPT 5.3     Unidad: Gránulo Azurófilo (Neutrófilo)
+Objetivo: Unidad semi-autónoma del Neutrófilo. Patrulla zona asignada, explota en área al morir, deja NET.
+Criterio de éxito: El Gránulo patrulla la zona indicada. Al morir explota haciendo daño de área. 30% de probabilidad de dejar NET.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: FlageloBacteriano funcionando (5.2).
+   
+  OBJETIVO: Unidad Gránulo Azurófilo.
+   
+  Crear Assets/Scripts/Units/GranuloAzurofilo.cs
+  hereda de UnitBase
+  capa 'Exterior', tag 'PlayerUnit'
+   
+  STATS:
+    MaxHP: 8
+    Speed: 2.5 u/seg
+    DegranulationDamage: 15 (daño de área al morir/impactar)
+    DegranulationRadius: 1.5u
+    FogRevealRadius: 2 tiles
+    ControlType: SemiAutonomous
+   
+  VISUAL:
+    Esfera irregular #E74C3C, radio 0.2u
+    Superficie: SpriteRenderer con sprite de 'granular' (muchas
+    pequeñas imperfecciones — usar un sprite simple con bordes rough)
+    Al detectar enemigo en radio: el sprite cambia a rojo más brillante
+    Animación de movimiento: rebote leve (bob up-down 0.03u, 1Hz)
+   
+  CONTROL SEMI-AUTÓNOMO:
+    Click derecho en zona del mapa → el Gránulo patrulla esa zona
+    (en radio 2u alrededor del punto de destino)
+    Si detecta unidad con tag 'EnemyUnit' en radio 3u: la persigue
+    Si el target escapa a más de 8u: volver a patrullar la zona asignada
+   
+  DEGRANULACIÓN (el ataque real):
+    Trigger A — Al impactar con un enemigo (OnTriggerEnter2D):
+      Immediately trigger degranulation
+    Trigger B — Al llegar a HP 0:
+      Trigger degranulation antes de destruirse
+   
+    Degranulation():
+    1. Flash visual rojo + partículas explosivas (burst 20 partículas)
+    2. OverlapCircle(transform.position, DegranulationRadius)
+    3. Para cada collider con tag 'EnemyUnit' o 'EnemyCell':
+       DamageSystem.DealDamage(target, DegranulationDamage)
+       Nota: también daña propias en el área — advertir al jugador
+       con un texto flotante '⚠ Fuego amigo' si daña propias
+    4. Destruir el GameObject
+   
+  NET (30% de probabilidad al morir por HP 0):
+    Si Random.value < 0.3f:
+    - Instanciar prefab 'NETZone' en la posición de muerte
+    - NETZone es un CircleCollider2D trigger, radio 1.2u
+    - Dura 5 segundos luego se destruye
+    - Mientras está activo: cualquier unidad con tag 'EnemyUnit'
+      en su area tiene Speed reducido en 70%
+    - Visual: sprite de 'red' semitransparente #ECF0F1 alpha 0.4
+  
+
+□  Gránulo patrulla zona asignada con click derecho
+□  Persigue enemigos en radio 3u
+□  Degranulación hace daño de área al impactar o morir
+□  NET aparece con 30% de probabilidad al morir por HP
+□  La NET reduce velocidad de enemigos en el área
+
+  PROMPT 5.4     EnvironmentalEventSystem — 2 Eventos
+Objetivo: Dos eventos ambientales activos en el mini-juego: Ola de Calor e Inundación de Nutrientes.
+Criterio de éxito: Los eventos ocurren en momentos aleatorios durante la partida. Sus efectos son visibles en el mapa y en el HUD.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Proyecto Protogenesis: Primordia.
+  StressSystem y ResourceManager funcionando.
+   
+  OBJETIVO: Sistema de eventos ambientales.
+  Para el mini-juego: solo 2 eventos.
+  Los otros 6 del GDD se agregan en iteraciones posteriores.
+   
+  Crear Assets/Scripts/Ecosystem/EnvironmentalEventSystem.cs
+   
+  SISTEMA BASE:
+    Lista de eventos disponibles (ScriptableObjects EventData)
+    Cada EventData tiene: id, duración, probabilidadPorMinuto,
+    área afectada, efectos.
+   
+    En Update(): cada minuto de juego, tirar un dado por cada evento.
+    Si Random.value < event.probabilidadPorMinuto: disparar el evento.
+    Solo un evento activo a la vez (el nuevo espera al terminar el anterior).
+   
+  EVENTO 1 — OLA DE CALOR:
+    Duración: 20 segundos
+    Probabilidad: 0.3 por minuto (30% de chance cada minuto)
+    Área: todo el mapa
+    Efectos:
+      - StressSystem recibe +3 stress/seg mientras dura
+      - Todos los nodos de recursos regeneran 50% más lento
+      - Visual: overlay amarillo-naranja semitransparente sobre el mapa
+        (un Quad de tamaño del mapa, color #FF8C00, alpha 0.15)
+      - Partículas de 'calor' ascendentes en el mapa
+    Aviso al jugador: texto en pantalla '🌡 OLA DE CALOR — 20s'
+    Nota: en modo PvP esto NO se avisa. Para el mini-juego: avisar.
+   
+  EVENTO 2 — INUNDACIÓN DE NUTRIENTES:
+    Duración: 10 segundos
+    Probabilidad: 0.2 por minuto
+    Área: zona aleatoria del mapa (radio 8 tiles)
+    Efectos:
+      - Todos los nodos en el área regeneran ×5 durante el evento
+      - Aparecen 3 nodos temporales de ATP en el área
+        (se destruyen al terminar el evento)
+      - Visual: overlay verde-azulado en el área afectada
+        color #27AE60, alpha 0.2
+    Aviso al jugador: '💧 INUNDACIÓN DE NUTRIENTES — Zona [X]'
+    El área afectada se muestra en el minimapa (si hay) o en el mapa
+    como un círculo parpadeante
+   
+  Al terminar cualquier evento: revertir todos sus efectos.
+  Guardar en EventSystem: lista de eventos que ocurrieron
+  (para estadísticas del post-match).
+  
+
+□  Los eventos ocurren aleatoriamente durante la partida
+□  Ola de Calor aumenta el stress y muestra overlay visual
+□  Inundación de Nutrientes acelera los nodos en área
+□  Los efectos se revierten al terminar el evento
+
+  PROMPT 5.5     RivalAI — IA Básica del Rival
+Objetivo: El rival controlado por IA juega como Bacteria. Farmea, instala orgánulos, secreta unidades y ataca.
+Criterio de éxito: El rival tiene una célula activa en el mapa. Farmea recursos. Secreta unidades que atacan al jugador.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Sistema completo de juego funcionando.
+  PlayerCellExterior, ResourceNode, FlageloBacteriano existentes.
+   
+  OBJETIVO: Crear el jugador rival controlado por IA.
+   
+  Crear Assets/Scripts/Exterior/RivalCell.cs
+    Mismo sprite que PlayerCellExterior pero color #E74C3C (rojo)
+    Tag: 'EnemyCell'
+    HP: 100 (igual que el jugador)
+    Posición inicial: tile (58, 58) — esquina opuesta al jugador
+    Sus unidades tienen tag 'EnemyUnit'
+    Tiene su propio ResourceManager separado (o el mismo con prefix 'rival_')
+    Especialización: Bacteria (siempre, para el mini-juego)
+   
+  Crear Assets/Scripts/Exterior/RivalAI.cs
+   
+  LOOP PRINCIPAL (ejecutar cada 4 segundos con InvokeRepeating):
+   
+    Phase 1 — FARMEO (si rival ATP < 60):
+      Mover RivalCell hacia el nodo de recurso más cercano
+      que no esté ocupado por el jugador
+   
+    Phase 2 — CONSTRUCCIÓN (si rival ATP >= 60 y no tiene Flagelo):
+      Simular instalación de Mitocondria al tick 8s
+      Simular instalación de Flagelo al tick 20s
+      (no necesita un OrganelleInstaller visual — solo cambiar stats)
+   
+    Phase 3 — SECRETAR (si Flagelo 'instalado' y ATP >= 8):
+      si unidades rivales activas < 3: secretar un Flagelo rival
+      (FlageloBacteriano con tag 'EnemyUnit', color #C0392B)
+   
+    Phase 4 — ATACAR (si tiene unidades activas):
+      si unidades > 0: ordenar a TODAS moverse hacia PlayerCellExterior
+      si PlayerCellExterior está en radio 10u: mover RivalCell también
+   
+  ESCALADO DE DIFICULTAD SIMPLE:
+    Fácil: loop cada 6 segundos, máx 2 unidades
+    Normal: loop cada 4 segundos, máx 3 unidades (default)
+    Difícil: loop cada 2.5 segundos, máx 5 unidades
+   
+  Para el mini-juego: usar Normal como default.
+  Agregar un campo [SerializeField] DifficultyLevel en el Inspector.
+  
+
+□  Rival visible en esquina opuesta del mapa
+□  La IA farmea recursos hacia su célula
+□  La IA secreta Flagelos cuando tiene ATP suficiente
+□  Los Flagelos rivales atacan al jugador
+□  La IA ataca más agresivamente al jugador en modo Difícil
+
+  PROMPT 5.6     VictoryManager Adaptado
+Objetivo: Las condiciones de victoria y derrota funcionan. La partida termina correctamente.
+Criterio de éxito: Al destruir la célula rival: pantalla de victoria. Al ser destruido: pantalla de derrota.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: RivalAI y PlayerCellExterior funcionando.
+  VictoryManager.cs y PostMortemUI.cs existentes en el proyecto.
+   
+  OBJETIVO: Adaptar VictoryManager para el nuevo juego.
+   
+  CONDICIONES DE VICTORIA:
+    A) RivalCell HP <= 0:
+       EventBus.OnVictory?.Invoke(true) // local player wins
+   
+    B) Inanición del rival:
+       Si rival ATP < 1 por más de 60 ticks (15 segundos):
+       EventBus.OnVictory?.Invoke(true)
+   
+  CONDICIONES DE DERROTA:
+    A) PlayerCellExterior HP <= 0:
+       DeathSystem.TriggerDeath(DeathType.Lysis)
+       EventBus.OnVictory?.Invoke(false)
+   
+    B) Colapso metabólico (del MetabolismEngine, 5.1):
+       DeathSystem.TriggerDeath(DeathType.MetabolicCollapse)
+       EventBus.OnVictory?.Invoke(false)
+   
+  SECUENCIAS VISUALES DE MUERTE (en DeathSystem.cs):
+    DeathType.Lysis:
+      Particle burst masivo desde el centro de la célula
+      El sprite explota en 6–8 fragmentos que salen disparados
+      Sonido de 'pop' (si hay SFX en el proyecto)
+   
+    DeathType.MetabolicCollapse:
+      Todo en el interior se ralentiza gradualmente (Time.timeScale 1→0.3)
+      El sprite de la célula se vuelve gris
+      Cada orgánulo interior se apaga uno a uno (0.5s entre cada uno)
+      Fade out general de 2 segundos
+      (restaurar Time.timeScale = 1 antes de cargar la pantalla post-match)
+   
+  Al terminar la secuencia: cargar PostMatchUI (5.7).
+   
+  Actualizar CellHP.cs para que al llegar a 0 llame a
+  VictoryManager.OnCellDestroyed(bool isPlayer).
+  
+
+□  Victoria al destruir la célula rival
+□  Derrota al ser destruido
+□  Secuencia visual de Lysis funciona
+□  Secuencia visual de Colapso Metabólico funciona
+
+  PROMPT 5.7     PostMatchUI — Pantalla Post-Partida
+Objetivo: Pantalla de victoria/derrota con estadísticas, tipo de muerte y consejo diagnóstico.
+Criterio de éxito: La pantalla aparece al terminar la partida. Muestra la causa correcta. El botón de reiniciar funciona.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: VictoryManager funcionando (5.6).
+  PostMortemUI.cs existe — adaptar.
+   
+  OBJETIVO: Pantalla post-partida completa.
+   
+  Adaptar Assets/Scripts/UI/PostMortemUI.cs
+  Renombrar a PostMatchUI (o crear PostMatchUI.cs nuevo)
+   
+  SUSCRIBIRSE a EventBus.OnVictory(bool playerWon)
+  Al recibir el evento: mostrar el panel correspondiente.
+   
+  PANEL DE VICTORIA:
+    Fondo: #0D2137 con borde verde #27AE60
+    Texto grande: '✓ VICTORIA' color #27AE60
+    Especialización alcanzada con su ícono
+   
+    ESTADÍSTICAS (leer de los sistemas activos):
+    - ATP total producido en la partida (de MetabolismEngine)
+    - Unidades secretadas totales (de MoleculeSecretor)
+    - Unidades convertidas a Legado (de LegacySystem)
+    - Eventos ambientales que ocurrieron
+    - Tiempo total de la partida
+   
+    Botón 'Jugar de nuevo' → SceneManager.LoadScene('GameScene')
+    Botón 'Menú principal' → SceneManager.LoadScene('MainMenu')
+   
+  PANEL DE DERROTA:
+    Fondo: #1A0D0D con borde rojo #E74C3C
+    Texto grande: 'DERROTA' color #E74C3C
+    Tipo de muerte con ícono:
+      💥 Lisis osmótica
+      ⚡ Colapso metabólico
+      (agregar los otros 3 para las iteraciones siguientes)
+   
+    CONSEJO SEGÚN TIPO DE MUERTE:
+    Lisis:             '💡 La membrana necesita más lípidos.
+                        Instala una Vacuola temprano para aumentar
+                        tu capacidad de almacenar lípidos.'
+    MetabolicCollapse: '💡 La Mitocondria debe ser tu primera
+                        instalación. Sin ATP, nada funciona.'
+   
+    Mismas estadísticas que victoria
+    Botón 'Intentar de nuevo' → SceneManager.LoadScene('GameScene')
+  
+
+□  Panel de victoria aparece al ganar
+□  Panel de derrota aparece al perder
+□  El tipo de muerte correcto se muestra
+□  El consejo es relevante al tipo de muerte
+□  Botón de reiniciar funciona
+
+
+
+  ⬛  FASE 6  —  PULIDO DEL MINI-JUEGO  
+El mini-juego existe. Ahora tiene que ser jugable de verdad. Un playtest end-to-end revela los bugs críticos. El balance de ATP determina si la partida tiene ritmo correcto. El Snapshot exporta el estado para Protogenesis.
+
+  PROMPT 6.1     Playtest — Flujo Completo End-to-End
+Objetivo: Verificar que una partida completa puede jugarse sin bugs críticos.
+Criterio de éxito: Una partida de principio a fin funciona sin crashes, errores de referencia nula ni estados imposibles.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Mini-juego completo con todas las fases implementadas.
+   
+  OBJETIVO: Playtest del flujo completo y corrección de bugs.
+   
+  FLUJO A VERIFICAR (en orden):
+  1. Iniciar partida → vista interior activa, partículas visibles
+  2. Click en núcleo → panel abre con 3 pestañas
+  3. Tab 1 Síntesis → instalar Mitocondria (consumo ATP correcto)
+  4. Tab 2 Genes → Mitocondria aparece con toggle ON
+  5. Apagar Mitocondria → countdown visual de 30 ticks
+  6. Reactivar antes de 30 ticks → se recupera sin costo
+  7. Presionar Tab → cambio a vista exterior con fade
+  8. Click derecho en mapa → célula se mueve
+  9. Acercarse a un nodo → recursos suben en el HUD
+  10. Volver al interior → instalar Flagelo o Gránulo
+  11. Exterior → presionar 1 o 2 → aparece la unidad
+  12. La unidad responde a órdenes (Flagelo) o patrulla (Gránulo)
+  13. La IA rival se mueve, farmea y secreta sus propias unidades
+  14. Combate entre unidades → una muere con efecto visual
+  15. Si Gránulo muere: explosión de área, posible NET
+  16. Evento ambiental ocurre en algún punto de la partida
+  17. Victoria o derrota → pantalla post-match correcta
+  18. Botón de reiniciar → partida nueva funciona
+   
+  BUGS CONOCIDOS A VERIFICAR:
+    - Tab no debe perder el input de movimiento de la célula
+    - Los recursos farmeados deben aparecer en HUD inmediatamente
+    - La IA rival no debe quedarse atascada en tiles Matrix
+    - La degranulación del Gránulo NO debe destruir la célula base propia
+    - Las unidades de Legado no deben atacar propias
+    - Al reiniciar: todos los sistemas deben resetearse correctamente
+   
+  Reportar cada bug encontrado con:
+    - Paso exacto donde ocurre
+    - Error de consola (si hay)
+    - Stack trace si está disponible
+    - Fix aplicado o propuesta de fix
+  
+
+□  El flujo completo de 18 pasos funciona sin crashes
+□  No hay errores de referencia nula en la consola
+□  Reiniciar la partida funciona correctamente
+
+  PROMPT 6.2     Balance de ATP y Curvas Económicas
+Objetivo: Ajustar los números para que la partida dure entre 5 y 10 minutos con ritmo correcto.
+Criterio de éxito: Una partida típica dura 5–10 minutos. El jugador nunca tiene demasiado ATP ni colapsa constantemente en el primer minuto.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Mini-juego jugable y testeado (6.1).
+   
+  OBJETIVO: Ajustar el balance económico del mini-juego.
+   
+  SÍNTOMAS Y AJUSTES:
+   
+  SÍNTOMA: La partida dura < 3 minutos
+    La IA es demasiado agresiva o las unidades hacen mucho daño.
+    AJUSTE: Aumentar HP de PlayerCellExterior de 100 a 150.
+    AJUSTE: Reducir frecuencia de loop de RivalAI de 4s a 6s.
+    AJUSTE: Reducir Damage del Flagelo Bacteriano de 5 a 3.
+   
+  SÍNTOMA: El jugador colapsa constantemente por falta de ATP
+  en el primer minuto
+    El metabolismo basal es insuficiente.
+    AJUSTE: Aumentar metabolismo basal de 0.5 a 1.2 ATP/seg.
+    AJUSTE: Reducir costo de Mitocondria de 20 ATP a 12 ATP.
+   
+  SÍNTOMA: La partida dura > 15 minutos sin resolverse
+    La economía es demasiado estable y no hay presión.
+    AJUSTE: Aumentar consumo pasivo de membrana de 0.5 a 0.8 ATP/seg.
+    AJUSTE: Aumentar agresividad de IA (loop cada 3s en vez de 4s).
+    AJUSTE: Reducir regeneración de nodos de 1.5 a 1.0 unidades/seg.
+   
+  SÍNTOMA: El jugador nunca pierde (demasiado fácil)
+    AJUSTE: Aumentar daño de Flagelo rival de 5 a 7.
+    AJUSTE: Aumentar máximo de unidades de la IA de 3 a 4.
+   
+  SÍNTOMA: El jugador siempre pierde (demasiado difícil)
+    AJUSTE: Reducir Speed del Flagelo rival de 4.0 a 3.0.
+    AJUSTE: Reducir la probabilidad de la IA de secretar unidades.
+   
+  PARÁMETROS A EXPONER EN EL INSPECTOR para balance fácil:
+    En RivalAI: aiLoopInterval, maxUnits, unitDamageMultiplier
+    En MetabolismEngine: basalProduction, membraneCost
+    En ResourceNode: regenerationRate, resourcePerSecond
+    En FlageloBacteriano: maxHP, speed, damage
+   
+  Meta objetivo: una partida donde el resultado no es
+  predecible después del minuto 3.
+  
+
+□  La partida dura entre 5 y 10 minutos
+□  El jugador gana aproximadamente el 50% de las veces
+□  El ATP nunca colapsa en el primer minuto si el jugador actúa
+□  Los parámetros de balance están expuestos en el Inspector
+
+  PROMPT 6.3     SnapshotSystem — Exportar a Protogenesis
+Objetivo: Serializar el estado final de la célula a JSON para exportar a Protogenesis.
+Criterio de éxito: Al terminar una partida, se genera un archivo JSON con todos los datos del Snapshot. El JSON es legible y contiene los datos del GDD.
+
+  ▶  COPIAR Y PEGAR EN CLAUDE CODE
+  CONTEXT: Mini-juego completo y balanceado.
+   
+  OBJETIVO: Sistema de exportación Snapshot para Protogenesis.
+   
+  Crear Assets/Scripts/Progression/SnapshotSystem.cs
+   
+  [System.Serializable]
+  public class CellSnapshot {
+    public string specializationType;   // 'Bacteria', 'Neutrofilo', etc.
+    public List<string> installedOrganelles; // IDs de orgánulos al final
+    public float metabolicEfficiency;   // 0-1, ATP producido / max teórico
+    public float membranePctAtEnd;      // % HP de membrana al final
+    public List<string> resistances;   // tipos de daño con < 5 stress recibido
+    public Dictionary<string,int> matchupsWon; // spec rival → veces ganado
+    public string dominantDeathType;   // tipo de muerte más recibido si perdió
+    public int legacyUnitsAtEnd;       // unidades de Legado vivas al final
+    public float totalPlaytimeSeconds;
+    public string gameVersion = '1.0.0-primordia';
+    public System.DateTime timestamp;
+  }
+   
+  CUÁNDO SE GENERA:
+    Al recibir EventBus.OnVictory(bool won):
+    1. Recopilar datos de todos los sistemas activos
+    2. Serializar a JSON: JsonUtility.ToJson(snapshot, prettyPrint:true)
+    3. Guardar en Application.persistentDataPath/snapshots/
+       filename: 'snapshot_{timestamp}.json'
+    4. También guardar como PlayerPrefs 'lastSnapshot' para acceso rápido
+   
+  EN LA PANTALLA POST-MATCH:
+    Mostrar un botón 'Exportar a Protogenesis'
+    Al hacer click: abrir el explorador de archivos en la carpeta
+    de snapshots (Application.OpenURL o System.Diagnostics.Process)
+    O simplemente mostrar el path en pantalla: 'Guardado en: [path]'
+   
+  DATOS DE RESISTENCIAS:
+    resistances se llena con los tipos de daño donde el StressSystem
+    recibió < 5 puntos de stress total de ese tipo en toda la partida.
+    Ejemplo: si nunca te afectó la toxicidad: 'resistance_toxicity'
+   
+  Crear también un método estático:
+    CellSnapshot LoadLastSnapshot()
+    Lee el último snapshot guardado en PlayerPrefs.
+    (Para uso futuro cuando Protogenesis lo importe)
+  
+
+□  Al terminar la partida se genera el archivo JSON
+□  El JSON contiene todos los campos del CellSnapshot
+□  El botón de exportar en el post-match muestra el path del archivo
+□  LoadLastSnapshot() retorna el snapshot guardado correctamente
+
+
+

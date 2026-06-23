@@ -1,0 +1,61 @@
+PROTOGENESIS: PRIMORDIA — MAPA DE CONTROLES
+Generado: 2026-04-18
+==============================================
+
+TECLA              | SCRIPT                     | ACCIÓN
+-------------------|----------------------------|-----------------------------------------
+Tab                | ViewManager                | Cambiar vista Interior ↔ Exterior
+Escape             | SettingsController         | Pausa / Reanudar (abre menú opciones)
+C                  | SceneBootstrap (OnGUI)     | Rotar directiva de colonia (Defend/Explore/Produce)
+N                  | NucleusPanel               | Abrir/cerrar panel del núcleo
+E                  | SpecializationUI           | Abrir/cerrar árbol de especialización
+T                  | SpecializationTreeUI       | Abrir/cerrar árbol de desbloqueos genéticos
+F                  | ChallengeManager           | Huir del encuentro PvP activo
+Space              | CombatMinigame             | Ráfaga ATP (en combate 1v1)
+Q                  | CombatMinigame             | Defensa (en combate 1v1)
+E *                | CombatMinigame             | Toxina (en combate 1v1 — mismo que SpecUI, contextos exclusivos)
+G                  | SlotInstallUI              | Abrir instalador de slots (requiere ProtobacteriaSelected)
+P                  | EnvironmentMonitor         | Toggle monitor de entorno (debug)
+H                  | EraProgressUI              | Toggle UI de progresión de era (debug)
+M                  | MinimapHUD                 | Toggle minimapa
+Escape             | SpecializationUI           | Cerrar panel (si está abierto)
+Escape             | SpecializationTreeUI       | Cerrar árbol (si está abierto)
+Escape             | OrganelleInstaller         | Cerrar instalador de orgánulos
+F1                 | PlaytestManager            | Toggle HUD de playtest
+F2                 | PlaytestManager            | Dump log de sesión a consola
+Tecla configurable | Mitocondria                | Turbo metabólico (SerializedField turboKey)
+Tecla configurable | ChemotaxisSystem           | Toggle modo quimiotaxis
+Tecla configurable | FagocytosisSystem          | Engulf / Fagocitar objetivo
+Tecla configurable | UpgradeUI                  | Toggle árbol de upgrades
+
+MOUSE
+------|----------------------------|-----------------------------------------
+Click derecho      | FluidMovementSystem        | Mover célula (destino de movimiento Bézier)
+Click derecho      | ChemotaxisSystem           | Establecer objetivo de quimiotaxis
+Click izquierdo    | OrganelleBuilder           | Instalar orgánulo (en build mode)
+Click derecho      | OrganelleBuilder           | Activar / cancelar build mode
+Click izquierdo    | OrganelleUI                | Seleccionar orgánulo en panel
+Click derecho      | ERA2_Archaea               | Objetivo de movimiento para unidades Archaea
+
+NOTAS:
+  * E aparece asignada a dos acciones (SpecializationUI y ToxinAttack). Son contextos
+    mutuamente exclusivos: SpecUI se usa en la vista Interior y ToxinAttack solo
+    durante combate activo. SettingsController lo marca como advertencia no-crítica.
+  * Las teclas N, E, T, F, Space, Q, E son remapables en Opciones → Controles (Escape).
+  * Tab, Escape y C NO son remapables actualmente (hardcoded o manejadas en OnGUI).
+
+_Deprecated (no activos en partida):
+  Arrow Keys    → CAP.cs (deprecated)
+  Z/X/C/V/B     → ChemicalSignalSystem (deprecated)
+  F1-F4         → MicroscopeModeManager (deprecated)
+  LeftArrow / RightArrow / Return / Space → ProtobacteriaSelectUI (deprecated)
+
+[V5 2.0]
+= : Toggle Colony Districts panel
+Keypad + : Auto-design claimed districts
+Keypad - : Export district profile JSON
+Keypad * : Import district profile JSON
+End : Toggle Demo Milestone 2.0 panel
+Ctrl+PageDown : Stabilize current demo run
+Ctrl+Insert : Spawn controlled demo pressure
+Ctrl+PageUp : Export Demo 2.0 report JSON

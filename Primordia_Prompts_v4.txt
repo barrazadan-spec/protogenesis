@@ -1,0 +1,1578 @@
+PROTOGENESIS: PRIMORDIA
+Prompts de Implementación — v4.0
+
+Basado en GDD v4.2 DEFINITIVO · Auditoría completa de Assets v3
+7 Fases · 28 Prompts · Mini-juego 1v1 jugable con mecánicas biológicas completas
+
+ÍNDICE DE PROMPTS
+N°
+NOMBRE
+FASE
+RESULTADO
+0.1
+Limpieza total de legacy — eliminar inputs y sistemas viejos
+Fase 0
+Proyecto limpio sin código del v4.6
+0.2
+SpecializationType — enum de 12 tipos biológicos
+Fase 0
+Enum correcto base para todos los sistemas
+0.3
+EventBus — agregar eventos del GDD v4.2
+Fase 0
+Todos los eventos declarados
+1.1
+CellProgressionPhase — 3 fases lineales obligatorias
+Fase 1
+Progresión guiada con hints contextuales
+1.2
+FluidMovementSystem — movimiento Bezier viscoso
+Fase 1
+Click derecho mueve con curva orgánica
+1.3
+PlayerCellExterior — integrar movimiento fluido + squash&amp;stretch
+Fase 1
+Célula se mueve como organismo real
+2.1
+MembraneSegmentSystem — 6 segmentos independientes
+Fase 2
+HP por zonas con color por estado
+2.2
+CellState — integrar segmentos de membrana
+Fase 2
+CellState usa segmentos en lugar de HP único
+2.3
+CellDivisionSystem — mecánica central de división
+Fase 2
+Click divide la célula madre en madre + hija
+2.4
+DirectiveSystem — 5 directivas para células hijas
+Fase 2
+Las hijas siguen directivas con IA
+2.5
+TabSwitchSystem — switch de control entre células
+Fase 2
+Tab cicla entre células propias vivas
+2.6
+ReabsorptionSystem — reabsorber hijas en la madre
+Fase 2
+La madre engulle a su hija devolviendo recursos
+3.1
+ChemicalGradientSystem — toxinas como gradientes
+Fase 3
+Las toxinas difunden por el mapa como área
+3.2
+FagocytosisSystem — fagocitosis visual al contacto
+Fase 3
+La Ameba engulle con animación de pseudópodos
+3.3
+SpecializationTracker — 3 fuentes de puntos
+Fase 3
+Tracker responde a genes, estructuras y comportamiento
+3.4
+GeneticRingSystem — árbol génico 3 anillos
+Fase 3
+Click en Núcleo abre los 3 anillos interactivos
+4.1
+ExteriorCellRenderer — célula reactiva a orgánulos
+Fase 4
+Instalar Flagelo cambia el sprite exterior
+4.2
+CellStateVisuals — íconos flotantes de estado
+Fase 4
+⚡🔥💀 aparecen sobre las células en estado crítico
+4.3
+PowerMomentSystem — flash + audio en momentos clave
+Fase 4
+Consolidación e invocación de premium son cinematográficos
+4.4
+ZoomIntelligenceSystem — zoom revela info del rival
+Fase 4
+Zoom 4 muestra orgánulos y genes activos del rival
+4.5
+DeathSystem — 5 tipos con secuencias visuales
+Fase 4
+Cada muerte tiene visual y diagnóstico específico
+5.1
+RivalCellController — IA rival con BehaviorProfile
+Fase 5
+El rival tiene personalidad por arquetipo
+5.2
+BiomassSystem — límite global + soft/hard cap
+Fase 5
+Crecer tiene costo sistémico real
+5.3
+PremiumUnitSystem — 4 unidades premium
+Fase 5
+Tardígrado, Volvox, Hidra, Paramecio invocables
+6.1
+VictoryManager — victoria y derrota del mini-juego
+Fase 6
+La partida termina con condición correcta
+6.2
+PostMatchUI — pantalla post-partida con diagnóstico
+Fase 6
+Diagnóstico del tipo de muerte + estadísticas
+7.1
+Balance y playtest — partida 1v1 completa
+Fase 7
+Partida de 20-35 minutos jugable y balanceada
+7.2
+FogOfWar + memoria química del mapa
+Fase 7
+Niebla de guerra + rastro de movimiento visible
+7.3
+Mapa circular con zonas estratégicas
+Fase 7
+Fótica, Pelágica, Béntica con efectos reales
+
+ FASE 0 — LIMPIEZA TOTAL Y FUNDAMENTOS 
+Antes de cualquier código nuevo, el proyecto tiene que quedar limpio de todos los sistemas legacy del v4.6. Un sistema legacy activo contamina los nuevos.
+
+ PROMPT 0.1 Limpieza Total de Legacy
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Proyecto Protogenesis: Primordia en Unity 6.3.
+ El proyecto tiene código del v4.6 que hay que eliminar
+ antes de implementar el GDD v4.2.
+ 
+ LEER PRIMERO todos los archivos en Assets/Scripts/
+ para entender el estado actual.
+ 
+ OBJETIVO: Eliminar o comentar todos los sistemas legacy.
+ 
+ SISTEMAS A ELIMINAR (comentar con // DEPRECATED v4.6):
+ 
+ · InstabilitySystem.cs — reemplazado por StressSystem
+ · MetabolicHeatSystem.cs — integrado al StressSystem
+ · BalanceSystem.cs — reemplazado por BiomassSystem
+ · GeneticTreeSystem.cs — reemplazado por GeneticRingSystem
+ · UpgradeTree.cs + UpgradeUI.cs — reemplazados
+ · EraManager.cs (ambas copias) — eliminado el concepto de eras
+ · ChallengeManager.cs + CombatMinigame.cs — eliminados
+ · MicroscopeModeManager.cs (en _Deprecated) — ya deprecado
+ · ArchetypeLibrary.cs + ArchetypeResolver.cs — reemplazados
+ por SpecializationType.cs
+ 
+ INPUTS A COMENTAR en cualquier archivo que los tenga:
+ · Input.GetKeyDown(KeyCode.T) — árbol genético viejo
+ · Input.GetKeyDown(KeyCode.Space) — ráfaga ATP vieja
+ · Input.GetKeyDown(KeyCode.F) — huir combate
+ · Input.GetKeyDown(KeyCode.C) — directiva de colonia vieja
+ · Input.GetKeyDown(KeyCode.N) — núcleo separado
+ · Input.GetMouseButtonDown(1) en OrganelleBuilder.cs
+ (conflicto con FluidMovementSystem)
+ 
+ DESPUÉS DE LIMPIAR: compilar y verificar que no hay
+ errores de referencia. Los warnings son aceptables.
+ Los errores de compilación no.
+ 
+ Reportar: archivos modificados + errores que quedaron.
+ 
+
+□ El proyecto compila sin errores
+□ Los sistemas legacy están comentados
+□ No hay inputs en conflicto
+
+ PROMPT 0.2 SpecializationType — 12 Tipos Biológicos
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: SpecializationType.cs existe pero puede tener
+ el enum antiguo (Fotosintética, Flagelada, etc.).
+ 
+ OBJETIVO: Reemplazar el contenido con el enum del GDD v4.2.
+ 
+ CONTENIDO FINAL:
+ 
+ namespace Protogenesis.Progression
+ {
+ public enum SpecializationType
+ {
+ None = 0,
+ Bacteria = 1,
+ Arquea = 2,
+ Cianobacteria = 3,
+ Hongo = 4,
+ Ameba = 5,
+ Flagelado = 6,
+ Ciliado = 7,
+ Neutrofilo = 8,
+ Macrofago = 9,
+ CelulaNK = 10,
+ CelulaB = 11,
+ CelulaMadre = 12,
+ }
+ 
+ public enum CellGeneration
+ { Mother, Daughter, Granddaughter, Premium }
+ 
+ public enum DirectiveType
+ { Follow, Farm, Attack, Defend, Explore }
+ 
+ public enum GeneticRing { Ring1, Ring2, Ring3 }
+ 
+ public enum DeathType
+ { Lysis, Intoxication, MetabolicCollapse,
+ Apoptosis, Freezing }
+ 
+ public enum CellVisualState
+ { Stable, LowEnergy, Overheat, HighStress, Collapse }
+ }
+ 
+ Buscar referencias al enum viejo en todos los archivos
+ y actualizarlas o comentarlas con TODO v4.2.
+ Compilar y reportar referencias pendientes.
+ 
+
+□ SpecializationType tiene 12 tipos del GDD v4.2
+□ CellGeneration, DirectiveType, GeneticRing, DeathType y CellVisualState declarados
+□ El proyecto compila
+
+ PROMPT 0.3 EventBus — Eventos del GDD v4.2
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: EventBus.cs existe y es completo.
+ NUNCA borrar eventos existentes. Solo AGREGAR.
+ 
+ OBJETIVO: Agregar al final de la clase EventBus
+ (antes de ClearAllListeners) estos bloques:
+ 
+ // ══ GDD v4.2 — DIVISIÓN ═════════════════════
+ public static event Action&lt;GameObject, GameObject&gt;
+ OnCellDivided; // (madre, hija)
+ public static event Action&lt;GameObject&gt;
+ OnCellReabsorbed; // (hija reabsorbida)
+ public static void TriggerCellDivided(
+ GameObject mother, GameObject daughter)
+ =&gt; OnCellDivided?.Invoke(mother, daughter);
+ public static void TriggerCellReabsorbed(GameObject d)
+ =&gt; OnCellReabsorbed?.Invoke(d);
+ 
+ // ══ GDD v4.2 — DIRECTIVAS ═══════════════════
+ public static event Action&lt;GameObject, DirectiveType&gt;
+ OnDirectiveChanged; // (célula, directiva)
+ public static void TriggerDirectiveChanged(
+ GameObject cell, DirectiveType directive)
+ =&gt; OnDirectiveChanged?.Invoke(cell, directive);
+ 
+ // ══ GDD v4.2 — GENES ════════════════════════
+ public static event Action&lt;GeneticRing, int&gt;
+ OnGeneActivated; // (anillo, índice del gen)
+ public static void TriggerGeneActivated(
+ GeneticRing ring, int geneIndex)
+ =&gt; OnGeneActivated?.Invoke(ring, geneIndex);
+ 
+ // ══ GDD v4.2 — ESTADOS VISUALES ═════════════
+ public static event Action&lt;GameObject, CellVisualState&gt;
+ OnCellVisualStateChanged;
+ public static void TriggerCellVisualStateChanged(
+ GameObject cell, CellVisualState state)
+ =&gt; OnCellVisualStateChanged?.Invoke(cell, state);
+ 
+ // ══ GDD v4.2 — ESPECIALIZACIÓN ══════════════
+ public static event Action&lt;SpecializationType, string&gt;
+ OnSpecializationConsolidated;
+ public static event Action&lt;SpecializationType, float&gt;
+ OnSpecializationScoreChanged;
+ public static void TriggerSpecializationConsolidated(
+ SpecializationType t, string name)
+ =&gt; OnSpecializationConsolidated?.Invoke(t, name);
+ public static void TriggerSpecializationScoreChanged(
+ SpecializationType t, float score)
+ =&gt; OnSpecializationScoreChanged?.Invoke(t, score);
+ 
+ // ══ GDD v4.2 — SEGMENTOS DE MEMBRANA ════════
+ public static event Action&lt;int,float,float&gt;
+ OnSegmentDamaged; // (segIdx, hpActual, hpMax)
+ public static event Action&lt;int&gt; OnSegmentBroken;
+ public static void TriggerSegmentDamaged(
+ int i, float hp, float max)
+ =&gt; OnSegmentDamaged?.Invoke(i,hp,max);
+ public static void TriggerSegmentBroken(int i)
+ =&gt; OnSegmentBroken?.Invoke(i);
+ 
+ // ══ GDD v4.2 — VICTORIA ══════════════════════
+ public static event Action&lt;bool&gt; OnMatchEnd;
+ public static event Action&lt;DeathType&gt; OnMotherDied;
+ public static void TriggerMatchEnd(bool playerWon)
+ =&gt; OnMatchEnd?.Invoke(playerWon);
+ public static void TriggerMotherDied(DeathType t)
+ =&gt; OnMotherDied?.Invoke(t);
+ 
+ // ══ GDD v4.2 — POWER MOMENTS ════════════════
+ public static event Action&lt;string&gt; OnPowerMoment;
+ public static void TriggerPowerMoment(string type)
+ =&gt; OnPowerMoment?.Invoke(type);
+ 
+ Agregar todos los nuevos eventos a ClearAllListeners().
+ Usar &apos;using Protogenesis.Progression;&apos; al inicio.
+ 
+
+□ Todos los eventos del GDD v4.2 declarados
+□ ClearAllListeners() actualizado
+□ Proyecto compila
+
+ FASE 1 — MOVIMIENTO Y PROGRESIÓN LINEAL 
+
+ PROMPT 1.1 CellProgressionPhase — 3 Fases Lineales
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Progression/
+ CellProgressionPhase.cs
+ 
+ FASES:
+ Protocell — solo Núcleo disponible
+ BaseMetabolic — Núcleo instalado → Mito + Ribo
+ Specializing — Mito+Ribo → paths de identidad
+ Consolidated — 60% → todo disponible
+ 
+ HINTS por fase:
+ Protocell: &apos;Presioná G → instalá el NÚCLEO&apos;
+ BaseMetabolic: &apos;Instalá MITOCONDRIA y RIBOSOMA&apos;
+ Specializing: &apos;Elegí tu camino evolutivo&apos;
+ Consolidated: &apos;&apos; (vacío — sin hint)
+ 
+ TRIGGERS de avance:
+ Protocell → BaseMetabolic:
+ Al recibir EventBus.OnOrganelleBuilt con
+ type.ToLower().Contains(&apos;nucleo&apos;)
+ 
+ BaseMetabolic → Specializing:
+ Al tener ambos: &apos;mitocondria&apos; y &apos;ribosoma&apos;
+ instalados simultáneamente
+ 
+ Specializing → Consolidated:
+ Al recibir EventBus.OnSpecializationConsolidated
+ 
+ FILTRO DE CATÁLOGO:
+ Exponer: List&lt;string&gt; GetAllowedOrganelles()
+ Protocell: [&apos;nucleo&apos;, &apos;nucleus&apos;]
+ BaseMetabolic: [&apos;mitocondria&apos;, &apos;ribosoma&apos;]
+ Specializing: [&apos;flagelo&apos;, &apos;lisosoma&apos;, &apos;gránulo&apos;,
+ &apos;tilacoide&apos;, &apos;pared&apos;, &apos;hifa&apos;, &apos;vacuola&apos;]
+ Consolidated: [] (vacío = todos permitidos)
+ 
+ Este método lo llama OrganelleInstaller.cs
+ para filtrar el catálogo visible.
+ 
+ Agregar CellProgressionPhase al mismo GameObject
+ que SpecializationTracker en la escena.
+ 
+
+□ Las 3 fases avanzan en el orden correcto
+□ El hint cambia según la fase actual
+□ GetAllowedOrganelles() filtra el catálogo
+
+ PROMPT 1.2 FluidMovementSystem — Movimiento Bezier
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Views/Exterior/
+ FluidMovementSystem.cs
+ 
+ INPUT: Input.GetMouseButtonDown(1) — click derecho
+ Convertir a posición mundial:
+ Vector2 worldPos = Camera.main
+ .ScreenToWorldPoint(Input.mousePosition);
+ 
+ TRAYECTORIA: Bezier cúbica con offset lateral:
+ Vector2 dir = (target - start).normalized;
+ Vector2 perp = new Vector2(-dir.y, dir.x);
+ float dist = Vector2.Distance(start, target);
+ float offset = dist * Random.Range(0.25f, 0.45f)
+ * (Random.value &gt; 0.5f ? 1f : -1f);
+ P0 = start;
+ P1 = start + dir*dist*0.33f + perp*offset;
+ P2 = start + dir*dist*0.67f + perp*offset*0.4f;
+ P3 = target;
+ 
+ AVANCE: En FixedUpdate():
+ _t = Mathf.MoveTowards(_t, 1f,
+ Time.fixedDeltaTime * moveSpeed / curveLength);
+ rb.MovePosition(EvalBezier(_t));
+ 
+ SQUASH &amp; STRETCH en LateUpdate():
+ Si IsMoving:
+ Calcular dirección de velocidad.
+ Rotar transform hacia la dirección.
+ Scale: (0.87, 1.16, 1) en la dirección de movimiento.
+ Lerp hacia ese scale: deltaTime * 9f.
+ Si no IsMoving:
+ Lerp hacia (1,1,1): deltaTime * 6f.
+ 
+ VELOCIDADES POR ESPECIALIZACIÓN (exponer float moveSpeed):
+ None/Protocell: 1.5f
+ Bacteria/Flagelado: 3.5f
+ Ciliado: 2.0f
+ Ameba: 0.8f
+ Default: 2.0f
+ 
+ Actualizar la velocidad al recibir
+ EventBus.OnSpecializationConsolidated.
+ 
+ PROPIEDADES PÚBLICAS:
+ bool IsMoving
+ void Stop()
+ void SetDestination(Vector2 target)
+ 
+
+□ Click derecho genera trayectoria curva
+□ La curvatura varía aleatoriamente
+□ Squash &amp; stretch funciona visualmente
+□ La velocidad se actualiza al consolidar
+
+ PROMPT 1.3 PlayerCellExterior — Integrar Movimiento y Estela
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: PlayerCellExterior.cs existe.
+ FluidMovementSystem.cs ya existe (prompt 1.2).
+ 
+ OBJETIVO: Integrar FluidMovementSystem y agregar estela.
+ 
+ 1. REQUERIR FluidMovementSystem como componente:
+ [RequireComponent(typeof(FluidMovementSystem))]
+ private FluidMovementSystem _fluid;
+ En Awake(): _fluid = GetComponent&lt;FluidMovementSystem&gt;();
+ 
+ 2. DESHABILITAR movimiento WASD si aún existe:
+ Buscar Input.GetAxis(&apos;Horizontal/Vertical&apos;)
+ o GetKey(KeyCode.W/A/S/D/UpArrow/etc.)
+ Comentar TODO ese bloque con // DEPRECATED WASD
+ 
+ 3. INDICADOR DE DESTINO al hacer click derecho:
+ Crear un SpriteRenderer hijo pequeño (escala 0.15)
+ con sprite de punto blanco, alpha 0.7.
+ Al click: posicionar en el punto de destino.
+ Al llegar (!_fluid.IsMoving): desactivarlo.
+ 
+ 4. ESTELA DE MOVIMIENTO:
+ Pool de 6 SpriteRenderers pequeños (radio 0.12).
+ Mientras IsMoving: cada 0.06s dejar una huella
+ en la posición actual con:
+ - Color de la especialización actual
+ - Alpha inicial 0.30
+ - Fade en 0.35 segundos
+ Al llegar a alpha 0: volver al pool.
+ El color lo lee de SpecializationTracker
+ .LeadingSpecialization.
+ 
+ 5. RECOLECCIÓN DE RECURSOS: verificar que sigue
+ funcionando — el Collider2D trigger con ResourceNode
+ debe continuar intacto.
+ 
+
+□ WASD deshabilitado
+□ Click derecho mueve con FluidMovementSystem
+□ Indicador de destino aparece y desaparece
+□ Estela visible mientras se mueve
+□ Recolección de recursos sigue funcionando
+
+ FASE 2 — DIVISIÓN CELULAR — LA MECÁNICA CENTRAL 
+
+ PROMPT 2.1 MembraneSegmentSystem — 6 Segmentos
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Views/
+ MembraneSegmentSystem.cs
+ 
+ CONSTANTES:
+ const int SEGMENTS = 6;
+ const float HP_PER_SEGMENT = 20f; // total 120 HP
+ 
+ COLORES:
+ HP &gt; 70%: color de la especialización
+ 30-70%: new Color(0.90f, 0.60f, 0.10f) naranja
+ &lt; 30%: new Color(0.86f, 0.20f, 0.18f) rojo parpadeante
+ 0%: grieta visible
+ 
+ MÉTODOS PÚBLICOS:
+ void DamageNearestSegment(Vector2 impactPoint,
+ float damage)
+ void DamageSegment(int segIndex, float damage)
+ void RepairSegment(int segIndex, float amount)
+ float TotalHP — suma de todos los segmentos
+ bool AnySegmentBroken — algún segmento en 0
+ float[] SegmentHPs — array público para la UI
+ 
+ CALCULAR SEGMENTO MÁS CERCANO al impacto:
+ float angle = Mathf.Atan2(
+ impactPoint.y - transform.position.y,
+ impactPoint.x - transform.position.x);
+ float deg = (angle * Rad2Deg + 360f) % 360f;
+ int seg = Mathf.RoundToInt(deg / 60f) % 6;
+ 
+ RUPTURA AL LLEGAR A 0:
+ EventBus.TriggerSegmentBroken(segIndex);
+ StressSystem.Instance.AddStress(
+ StressFactor.MechanicalDamage, 10f);
+ Iniciar propagación si no se repara en 10s.
+ 
+ REPARACIÓN AUTOMÁTICA:
+ En Update(): si Lipids &gt; 0.5 y algún segmento &lt; 100%:
+ Reparar el más dañado a 2 HP/seg.
+ Consumir 1 Lipid + 0.5 ATP por HP restaurado.
+ Llamar a ResourceManager.Instance.Consume().
+ 
+ VISUALIZACIÓN:
+ 6 sprites pequeños posicionados en el perímetro
+ de la célula (a 60° cada uno, radio 0.55u).
+ SortingOrder = 5 (sobre el sprite de la célula).
+ 
+
+□ 6 segmentos con HP independiente
+□ Color por estado funciona
+□ DamageNearestSegment calcula por ángulo
+□ Reparación automática consume Lipids
+□ OnSegmentBroken se dispara correctamente
+
+ PROMPT 2.2 CellState — Integrar Segmentos
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: CellState.cs existe. MembraneSegmentSystem.cs
+ ya existe (prompt 2.1).
+ 
+ CAMBIOS EN CellState.cs:
+ 
+ 1. CurrentHP lee de MembraneSegmentSystem cuando existe:
+ public float CurrentHP =&gt;
+ MembraneSegmentSystem.Instance != null
+ ? MembraneSegmentSystem.Instance.TotalHP
+ : _currentHP;
+ 
+ 2. MaxHP cuando hay segmentos: 120f (6 × 20)
+ 
+ 3. TakeDamage(float amount, Vector2 impactPoint):
+ Si MembraneSegmentSystem.Instance != null:
+ DamageNearestSegment(impactPoint, amount)
+ Else: _currentHP -= amount (fallback legacy)
+ 
+ 4. Suscribirse a EventBus.OnSegmentBroken.
+ Si AnySegmentBroken: llamar a
+ DeathSystem.Instance.TriggerDeath(DeathType.Lysis)
+ 
+ 5. Conservar el TakeDamage(float amount) sin Vector2
+ para compatibilidad — daña el segmento 0 por defecto.
+ 
+
+□ CurrentHP lee de MembraneSegmentSystem
+□ TakeDamage con Vector2 pasa al segmento correcto
+□ OnSegmentBroken dispara DeathSystem.Lysis
+
+ PROMPT 2.3 CellDivisionSystem — División Celular
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Core/
+ CellDivisionSystem.cs
+ 
+ ESTE ES EL SISTEMA MÁS IMPORTANTE DEL JUEGO.
+ 
+ FÓRMULA DE COSTO:
+ baseCost = 40f
+ generationFactor: 1a hija=1.0, 2a=1.6, 3a=2.5,
+ nieta=1.3
+ organelleCost = orgánolosActivos × 8f
+ stressPenalty = StressSystem.stress × 0.5f
+ totalCost = (baseCost × generationFactor)
+ + organelleCost - stressPenalty
+ Con Gen División Rápida: totalCost × 0.65f
+ 
+ SOFT CAP: si _activeCells &gt;= 6:
+ StressSystem.AddStress(+0.2f × celdas sobre el cap)
+ HARD CAP: si _activeCells &gt;= 10: dividir = bloqueado.
+ 
+ SECUENCIA DE DIVISIÓN (coroutine):
+ 0.0s: La madre empieza a alargarse (scale X × 1.6,
+ scale Y × 0.65 en 1.0s)
+ 1.0s: Estrangulamiento en el centro
+ 1.5s: Separación — crear célula hija con:
+ - HP: 65% de la madre
+ - Los 3 orgánulos más relevantes (auto)
+ - Genes de Anillo 1 y Anillo 2 copiados
+ - Directiva: Follow (⚪) por defecto
+ - Aura tenue durante 3s
+ 2.0s: Madre vuelve a su scale normal con spring
+ 
+ ACTIVACIÓN:
+ Exponer botón público Divide() que:
+ 1. Verifica que hay suficiente ATP
+ 2. Verifica que la generación es válida
+ (no se puede dividir una nieta)
+ 3. Consume los recursos
+ 4. Inicia la coroutine
+ 5. Llama EventBus.TriggerCellDivided(madre, hija)
+ 
+ Acceso: CellDivisionSystem.Instance.Divide(
+ motherCell, generation)
+ 
+
+□ La fórmula de costo es correcta
+□ La secuencia visual de división funciona
+□ La hija hereda los orgánulos correctos
+□ El soft cap y hard cap funcionan
+□ OnCellDivided se dispara
+
+ PROMPT 2.4 DirectiveSystem — 5 Directivas
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Core/DirectiveSystem.cs
+ 
+ Cada célula hija/nieta tiene una DirectiveType activa.
+ El sistema las ejecuta por IA.
+ 
+ CAMBIO DE DIRECTIVA:
+ Click derecho en una célula hija (cuando no es la
+ célula controlada activamente) → mostrar menú
+ radial con 5 íconos:
+ ⚪ Seguir 🔵 Farmear 🔴 Atacar 🟡 Defender 🟢 Explorar
+ 
+ IMPLEMENTACIÓN POR DIRECTIVA:
+ 
+ Follow (⚪):
+ Seguir a la célula madre a distancia 1.5u.
+ FluidMovementSystem.SetDestination(mother.position)
+ actualizado cada 0.5s.
+ 
+ Farm (🔵):
+ Buscar el ResourceNode más cercano.
+ Moverse a él. Al llegar: esperar hasta que se
+ agote o se llene la capacidad. Luego repetir.
+ 
+ Attack (🔴):
+ Buscar la célula rival más cercana.
+ Moverse hacia ella. Al contacto:
+ aplicar la mecánica de combate según
+ la especialización heredada.
+ 
+ Defend (🟡):
+ Orbitar a la célula madre en radio 3u.
+ Si una célula rival entra al radio:
+ interceptarla (cambiar a modo Attack temporal).
+ 
+ Explore (🟢):
+ Moverse en espiral desde la posición actual.
+ Revelar niebla de guerra. Radio de visión: 3u.
+ 
+ ÍCONO FLOTANTE:
+ Mostrar el ícono de la directiva activa sobre
+ cada célula hija en todo momento (excepto cuando
+ es la célula controlada activamente).
+ Tamaño: 24×24 px. Color: blanco semitransparente.
+ Escala con el zoom de la cámara.
+ 
+
+□ El menú radial aparece al hacer click en una hija
+□ Follow sigue a la madre
+□ Farm va al nodo más cercano
+□ Attack busca al rival más cercano
+□ El ícono de directiva es visible en el mapa
+
+ PROMPT 2.5 TabSwitchSystem — Switch de Control
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: ViewManager.cs existe.
+ CellDivisionSystem.cs ya existe (prompt 2.3).
+ 
+ OBJETIVO: El Tab debe ciclar entre células propias
+ cuando hay hijas activas. No solo interior/exterior.
+ 
+ LÓGICA DEL TAB (en ViewManager.Update()):
+ 
+ if (!Input.GetKeyDown(KeyCode.Tab)) return;
+ if (_isTransitioning) return;
+ 
+ var activeCells = CellDivisionSystem.Instance
+ .GetAllActiveCells(); // madre + hijas + nietas
+ 
+ if (CurrentView == ViewType.Interior)
+ {
+ SetView(ViewType.Exterior);
+ return;
+ }
+ 
+ // En el exterior: ciclar entre células
+ if (activeCells.Count &gt; 1)
+ {
+ _controlledCellIndex =
+ (_controlledCellIndex + 1) % activeCells.Count;
+ 
+ // Si dimos la vuelta completa: ir al interior
+ if (_controlledCellIndex == 0 &amp;&amp; _hasLooped)
+ {
+ SetView(ViewType.Interior);
+ _hasLooped = false;
+ return;
+ }
+ _hasLooped = (_controlledCellIndex == 0);
+ 
+ // Cambiar control a la célula seleccionada
+ SetControlledCell(activeCells[_controlledCellIndex]);
+ }
+ else
+ ToggleView(); // Sin hijas: alternar interior/exterior
+ 
+ CUANDO CAMBIA LA CÉLULA CONTROLADA:
+ · La cámara lerp hacia la nueva célula (0.4s)
+ · La célula controlada muestra outline activo
+ · Las otras células muestran sus íconos de directiva
+ · La célula que ya no se controla retoma su directiva
+ 
+
+□ Tab sin hijas: alterna interior/exterior
+□ Tab con hijas: cicla entre todas las células
+□ La cámara sigue a la célula controlada
+□ El outline indica cuál célula se controla
+
+ PROMPT 2.6 ReabsorptionSystem — Reabsorber Hijas
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: CellDivisionSystem.cs existe.
+ 
+ OBJETIVO: La madre puede reabsorber a una hija.
+ 
+ ACTIVACIÓN:
+ Mientras la célula madre es la controlada:
+ Si una célula hija propia está a distancia &lt; 1.2u:
+ Mostrar prompt &apos;[R] Reabsorber&apos; sobre la hija.
+ Al presionar R: iniciar ReabsorptionSequence(hija).
+ 
+ SECUENCIA (coroutine, 2 segundos):
+ 0.0s: Ninguna de las dos puede moverse.
+ 0.0-2.0s: La hija se encoge hacia la madre
+ (scale 1 → 0 en la dirección de la madre).
+ La madre pulsa suavemente (scale × 1.05 × 0.5s).
+ 2.0s: La hija desaparece.
+ Transferir a la madre:
+ - 80% de los recursos de la hija (ATP, AA, etc.)
+ - El HP actual de la hija (hasta el máximo)
+ Con Gen Reabsorción Total: 95%.
+ Llamar EventBus.TriggerCellReabsorbed(hija).
+ Decrementar _activeCells en CellDivisionSystem.
+ 
+ EFECTO EN COSTO DE DIVISIÓN:
+ CellDivisionSystem recibe la notificación y
+ decrementa el contador de hijas activas.
+ La siguiente división vuelve al factor × 1.0.
+ 
+
+□ Prompt [R] aparece cuando la hija está cerca
+□ La secuencia visual de reabsorción funciona
+□ Los recursos se transfieren correctamente
+□ El contador de divisiones baja
+
+ FASE 3 — COMBATE BIOLÓGICO Y ESPECIALIZACIÓN 
+
+ PROMPT 3.1 ChemicalGradientSystem — Toxinas Difusoras
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Core/
+ ChemicalGradientSystem.cs
+ 
+ CONCEPTO: Las toxinas no son proyectiles.
+ Se secretan y difunden como gradientes de concentración.
+ 
+ ESTRUCTURA DE DATOS:
+ class ChemicalAgent {
+ string agentType; // &apos;Bacteriocin&apos;,&apos;ROS&apos;,&apos;H2S&apos;,&apos;O2&apos;
+ Vector2 sourcePos;
+ float intensity; // 0-1
+ float radius; // unidades
+ float damagePerSec;
+ float duration; // segundos restantes
+ int factionId; // no dañarse a sí mismo
+ }
+ 
+ EVALUACIÓN cada 0.25s:
+ Para cada agente activo:
+ Para cada IDamageable en escena:
+ dist = distancia al sourcePos
+ if (dist &gt; radius) continue;
+ concentration = 1f - (dist / radius)²
+ dmg = damagePerSec × concentration × 0.25f
+ target.TakeDamage(dmg, sourcePos)
+ agent.duration -= 0.25f
+ Eliminar agentes expirados.
+ 
+ AGENTES PREDEFINIDOS:
+ EmitBacteriocin(pos, faction):
+ radius=3u, damage=2f/s, duration=5s
+ Solo daña a Bacteria (verificar con
+ SpecializationTracker del objetivo)
+ 
+ EmitH2S(pos, faction):
+ radius=5u, damage=3f/s, duration=8s
+ Daña a no-Arqueas
+ 
+ EmitROS(pos, faction):
+ radius=1.5u, damage=5f/s, duration=3s
+ Daña a todos (incluyendo propios)
+ 
+ EmitO2(pos, faction):
+ radius=4u, damage=0, stress=+4/s, duration=6s
+ Solo stressea a anaerobios
+ 
+ VISUALIZACIÓN:
+ Texture2D 32×32 sobre el mapa.
+ Cada agente pinta un círculo radial con alpha 0.20.
+ Color por tipo: Bacteriocin=rojo, H2S=amarillo,
+ ROS=naranja, O2=azul claro.
+ Actualizar la textura cada 0.25s con la evaluación.
+ 
+
+□ Los 4 agentes químicos emiten correctamente
+□ El daño por concentración funciona
+□ La textura visual del gradiente se actualiza
+□ factionId evita el daño propio
+
+ PROMPT 3.2 FagocytosisSystem — Fagocitosis Visual
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Core/
+ FagocytosisSystem.cs
+ 
+ CONDICIÓN DE INICIO (en OnTriggerEnter2D):
+ 1. Esta célula tiene Lisosoma instalado
+ 2. El objetivo tiene tag &apos;EnemyCell&apos; o &apos;EnemyUnit&apos;
+ 3. objetivo.worldSize &lt;= propio.worldSize × 0.6
+ 4. No hay otra fagocitosis activa en esta célula
+ 
+ SECUENCIA (coroutine FagocytosisSequence):
+ 
+ PASO 1 (0-1.5s): Pseudópodos
+ Crear 2 LineRenderers desde la membrana
+ rodeando al objetivo.
+ El objetivo queda inmóvil
+ (FluidMovementSystem.Stop()).
+ EventBus.TriggerFagocytosisStart(objetivo)
+ 
+ PASO 2 (1.5-2.5s): Internalización
+ El objetivo se encoge (scale → 0.3)
+ y se mueve al centro de la célula.
+ Los LineRenderers se retraen.
+ 
+ PASO 3 (2.5-3.5s): Digestión
+ El sprite del objetivo hace fade (alpha → 0).
+ Transferir recursos:
+ ResourceManager.Instance.Produce(ATP,
+ targetATP × 0.6f);
+ ResourceManager.Instance.Produce(AminoAcids,
+ targetAA × 0.6f);
+ 
+ PASO 4: Destrucción
+ Destroy(targetGameObject)
+ EventBus.TriggerFagocytosisComplete(
+ objetivo, recursosTotales)
+ 
+ CONTRA-JUGADA (durante Paso 1):
+ Si el objetivo tiene FluidMovementSystem activo
+ y el jugador hace click en dirección opuesta:
+ 40% probabilidad de escapar.
+ Al escapar: impulso ×2 velocidad por 0.5s.
+ 
+
+□ La fagocitosis se activa al contacto correcto
+□ Los pseudópodos son visibles
+□ Los recursos se transfieren al fagocitador
+□ La contra-jugada tiene 40% de probabilidad
+
+ PROMPT 3.3 SpecializationTracker — 3 Fuentes de Puntos
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: SpecializationTracker.cs existe.
+ Adaptarlo para el GDD v4.2.
+ 
+ FUENTES DE PUNTOS (3 fuentes simultáneas):
+ 
+ 35% — GENES ACTIVOS (en Update cada 1s):
+ Leer GeneticRingSystem.Instance.ActiveRing1Gene,
+ ActiveRing2Gene, ActiveRing3Gene.
+ Por cada gen activo: +1.5 puntos/seg al tipo
+ correspondiente (ver tabla de genes en GDD s.4).
+ 
+ 35% — COMPORTAMIENTO EN MAPA (en Update cada 0.5s):
+ distanceTraveled &gt; 2u en el último segundo
+ → +0.8 Flagelado, +0.4 Bacteria
+ ResourceNode recolectado sin combate reciente (10s)
+ → +1.0 Cianobacteria, +0.6 Ciliado
+ Contacto con célula rival (OnTriggerStay2D)
+ → +1.2 Ameba, +0.8 Macrofago, +0.8 Neutrofilo
+ Sin movimiento por &gt; 5s
+ → +1.0 Arquea, +0.8 Hongo
+ 
+ 30% — ESTRUCTURAS INSTALADAS (al instalar):
+ Flagelo: +8 Flagelado, +5 Bacteria
+ Lisosoma: +10 Ameba, +7 Macrofago
+ Gránulo: +12 Neutrofilo
+ Tilacoide: +10 Cianobacteria
+ Hifa: +12 Hongo
+ Pared: +8 Arquea, +5 Bacteria
+ 
+ CONSOLIDACIÓN al llegar a 60 puntos:
+ _consolidated = true
+ EventBus.TriggerSpecializationConsolidated(
+ type, displayName)
+ EventBus.TriggerPowerMoment(&apos;consolidation&apos;)
+ 
+ PROPIEDAD PÚBLICA:
+ SpecializationType LeadingSpecialization
+ float[] AllScores (array de 13 valores)
+ 
+
+□ Las 3 fuentes de puntos funcionan
+□ La consolidación se dispara al 60 puntos
+□ OnSpecializationConsolidated + OnPowerMoment disparan
+
+ PROMPT 3.4 GeneticRingSystem — Árbol Génico 3 Anillos
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Progression/
+ GeneticRingSystem.cs
+ 
+ ESTRUCTURA: 3 anillos, 4 genes cada uno.
+ Solo uno activo por anillo.
+ 
+ ACCESO: Click en el Núcleo dentro del panel E
+ → se abre la vista de anillos (UI sobre el panel interior).
+ 
+ ANILLO 1 — se desbloquea al instalar Mitocondria:
+ Gene0: Respiración aeróbica — ATP ×1.5, req O₂
+ Gene1: Fermentación — ATP +20%, +1 stress/seg
+ Gene2: Fotosíntesis — +2 ATP/seg en luz, req Tilacoide
+ Gene3: Quimiolitotrofía — ATP sin O₂ ni luz
+ 
+ ANILLO 2 — se desbloquea al instalar 1ra estructura de identidad:
+ Gene0: Motilidad activa — velocidad +50%, quimiotaxis
+ Gene1: Secreción pasiva — toxinas se secretan solos
+ Gene2: Reconocimiento — detectar genes rival a 3u
+ Gene3: Adhesión — velocidad 0, costo movimiento 0
+ 
+ ANILLO 3 — se desbloquea al consolidar al 60%:
+ Gene0: División rápida — costo división −35%
+ Gene1: Herencia fuerte — hijas heredan al 65%
+ Gene2: Autonomía celular — IA de hijas mejorada
+ Gene3: Reabsorción total — reabsorber devuelve 95%
+ 
+ PROPIEDADES PÚBLICAS:
+ int ActiveRing1Gene { get; } // 0-3, -1 si ninguno
+ int ActiveRing2Gene { get; }
+ int ActiveRing3Gene { get; }
+ void ActivateGene(GeneticRing ring, int geneIndex)
+ 
+ Al activar un gen: desactivar el que estaba activo en
+ ese anillo. Llamar EventBus.TriggerGeneActivated(
+ ring, geneIndex). Actualizar SpecializationTracker.
+ 
+ UI: OnGUI simple con 3 filas de 4 botones.
+ Botón activo: color verde. Bloqueado: gris.
+ Disponible: azul. Un botón por gen.
+ 
+
+□ Los 3 anillos se desbloquean en el momento correcto
+□ Solo un gen activo por anillo
+□ Al activar un gen: el anterior se desactiva
+□ SpecializationTracker recibe los puntos
+
+ FASE 4 — VISUALIZACIÓN Y LEGIBILIDAD 
+
+ PROMPT 4.1 ExteriorCellRenderer — Célula Reactiva
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Views/Exterior/
+ ExteriorCellRenderer.cs
+ 
+ Este componente modifica el SpriteRenderer y los
+ hijos visuales de la célula según los orgánulos
+ instalados y la especialización consolidada.
+ 
+ SUSCRIPCIONES:
+ EventBus.OnOrganelleBuilt → OnOrganelleInstalled
+ EventBus.OnSpecializationConsolidated → OnConsolidated
+ 
+ CAMBIOS VISUALES POR ORGÁNULO:
+ 
+ Flagelo bacteriano:
+ LineRenderer hijo. 4 puntos. Long: 0.8u.
+ Ondulación: Mathf.Sin(Time.time × 8 + phase)
+ en los puntos medios. Freq: 8Hz.
+ 
+ Flagelo eucariota:
+ LineRenderer hijo. 6 puntos. Long: 1.4u.
+ Ondulación más amplia: freq 3Hz.
+ 
+ Cilios (Ciliado):
+ 24 LineRenderers cortos (0.25u) en el perímetro.
+ Onda sinusoidal desfasada entre vecinos.
+ Phase offset = i × 0.26 radianes. Freq 2Hz.
+ 
+ Tilacoide instalado:
+ Lerp del color del SpriteRenderer hacia verde:
+ new Color(0.27f, 0.68f, 0.35f) en 1.5s.
+ 
+ Gránulo azurófilo:
+ 3 sprites pequeños (radio 0.06) rojo-coral
+ en posiciones aleatorias fijas dentro de la célula.
+ 
+ Hifa:
+ 2 LineRenderers ramificados (long 1.5u cada uno)
+ saliendo del cuerpo hacia el mapa.
+ 
+ AL CONSOLIDAR:
+ Los cambios visuales se vuelven permanentes.
+ Flash blanco (SpriteRenderer.color = white en 0.1s
+ luego lerp de vuelta al color de especialización).
+ Actualizar _sr.color al color canónico del tipo.
+ 
+
+□ Flagelo aparece al instalarlo
+□ Cilios tienen animación de onda
+□ El tint verde aparece con Tilacoide
+□ Flash de consolidación funciona
+
+ PROMPT 4.2 CellStateVisuals — Íconos Flotantes de Estado
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/UI/CellStateVisuals.cs
+ 
+ Muestra íconos flotantes sobre CADA célula propia
+ (madre + hijas + nietas) cuando entra en estado crítico.
+ 
+ ESTADOS Y TRIGGERS:
+ ⚡ LowEnergy: ATP &lt; 30% del máximo
+ 🔥 Overheat: Biomasa ratio &gt; 0.85
+ 🧬 HighStress: Stress &gt; 70 (de 100)
+ 💀 Collapse: Stress &gt; 90 o AnySegmentBroken
+ 
+ EVALUACIÓN: En Update() cada 0.5s para cada célula
+ propia activa. Evaluar las 4 condiciones.
+ Llamar EventBus.TriggerCellVisualStateChanged(
+ cell, newState) al cambiar.
+ 
+ VISUALIZACIÓN:
+ Por cada célula propia: un TextMeshProUGUI en
+ Canvas (World Space) sobre ella.
+ Posición: cell.position + Vector3.up × (radio + 0.3u)
+ El texto muestra los íconos activos concatenados:
+ Ejemplo: &apos;⚡🔥&apos; si tiene dos estados activos.
+ 
+ COLORES del texto base de la célula:
+ Ningún ícono: verde #4CAF50 (punto pequeño debajo)
+ Al menos 1: amarillo #FFC107
+ 💀 activo: rojo #F44336 parpadeante
+ 
+ ESCALA CON ZOOM:
+ El tamaño del texto escala inversamente al zoom
+ para que sea siempre legible:
+ textSize = baseSize × Camera.orthographicSize / 12f
+ 
+
+□ Los íconos aparecen al entrar en estado crítico
+□ Se muestran en todas las células propias
+□ El color base de la célula refleja el estado
+□ Escalan correctamente con el zoom
+
+ PROMPT 4.3 PowerMomentSystem — Momentos Cinematográficos
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Core/
+ PowerMomentSystem.cs
+ 
+ Suscribirse a EventBus.OnPowerMoment(string type).
+ Los tipos son: &apos;consolidation&apos;, &apos;premium&apos;, &apos;elimination&apos;.
+ 
+ MOMENTO: &apos;consolidation&apos; (al consolidar especialización):
+ 1. Flash blanco en la célula madre (SpriteRenderer
+ alpha 0→1→0 en 0.4s). Ya lo hace ExteriorCellRenderer.
+ 2. Glow radial: sprite circular blanco alpha 0.6
+ expandiéndose de radio 0 → 2u en 0.5s, luego fade.
+ 3. Texto flotante: nombre de la especialización
+ en el color canónico, aparece sobre la célula,
+ sube 1u y desaparece en 2.5s.
+ 4. AudioController.Play(&apos;specialization_achieved&apos;)
+ 
+ MOMENTO: &apos;premium&apos; (al invocar unidad premium):
+ Durante 8s de invocación:
+ Pulso radial cada 1s desde la madre.
+ Al emerger la unidad:
+ Zoom out automático de 0.4s (orthoSize × 1.4)
+ Flash + audio potente.
+ Volver al zoom normal en 2s.
+ 
+ MOMENTO: &apos;elimination&apos; (al eliminar rival):
+ Flash en la posición del rival (color de su
+ especialización expandiéndose y desvaneciéndose).
+ TextMeshPro: &apos;[TuEspec] eliminó a [RivalEspec]&apos;
+ En la parte superior de la pantalla por 2.5s.
+ Audio: &apos;cell_elimination&apos;.
+ 
+
+□ El flash de consolidación es visible
+□ El texto flotante muestra el nombre correcto
+□ El zoom out al invocar la premium funciona
+□ El mensaje de eliminación aparece en pantalla
+
+ PROMPT 4.4 ZoomIntelligenceSystem — Info Táctica por Zoom
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Views/Exterior/
+ ZoomIntelligenceSystem.cs
+ 
+ En LateUpdate(): evaluar distancia de la célula
+ controlada a cada célula rival.
+ 
+ NIVEL 3 (dist &lt; 5u):
+ Para cada orgánulo del rival (leer su SlotManager
+ o CellDivisionSystem):
+ Crear un sprite pequeño (radio 0.06u) semitransparente
+ (alpha 0.35) del color del orgánulo, en posición
+ aleatoria fija dentro del sprite rival.
+ Esto muestra qué tiene instalado.
+ 
+ NIVEL 4 (dist &lt; 3u):
+ Adicional al nivel 3:
+ Si el rival tiene Gen de Reconocimiento activo:
+ mostrar tooltip: &apos;Genes activos: [lista]&apos;
+ Usando TextMeshPro en Canvas World Space.
+ 
+ RECIPROCIDAD:
+ El rival ve los orgánulos del jugador de la
+ misma forma al acercarse.
+ La IA rival usa esta información en su lógica.
+ 
+ GESTIÓN DE OBJETOS:
+ Dictionary&lt;EnemyCell, List&lt;GameObject&gt;&gt; _intelVisuals
+ Al salir del rango: destruir los visuals.
+ Al entrar al rango: crearlos.
+ 
+ INTEGRAR con ZoomManager:
+ Agregar propiedad CurrentZoomLevel (int 1-4)
+ basada en el orthographicSize actual.
+ 
+
+□ En zoom 3 cerca del rival: manchas de orgánulos
+□ En zoom 4: tooltip con genes activos
+□ Los visuals se destruyen al alejarse
+
+ PROMPT 4.5 DeathSystem — 5 Tipos con Secuencias
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: DeathSystem.cs existe pero con lógica vieja.
+ Reescribir manteniendo el Singleton.
+ 
+ MÉTODO PRINCIPAL:
+ public void TriggerDeath(DeathType type)
+ {
+ if (IsInCollapse) return;
+ IsInCollapse = true;
+ _deathType = type;
+ StartCoroutine(DeathSequence(type));
+ }
+ 
+ SECUENCIAS:
+ 
+ Lysis:
+ Flash rojo en los segmentos rotos.
+ Partículas del color de los orgánulos instalados.
+ Dissolve del sprite en 0.8s.
+ Diagnosis: &apos;Membrana perforada. Girá para proteger
+ los segmentos dañados.&apos;
+ 
+ Intoxication:
+ El sprite se oscurece progresivamente (tint marrón).
+ Los orgánulos del interior se apagan uno a uno.
+ Fade out en 3s.
+ Diagnosis: &apos;Toxinas no expulsadas. Instalá Peroxisoma.&apos;
+ 
+ MetabolicCollapse:
+ Time.timeScale → 0.3 en 3s (ralentización).
+ Sprite se desatura.
+ Orgánulos se apagan en secuencia aleatoria.
+ Restaurar Time.timeScale = 1 antes de OnDeathComplete.
+ Diagnosis: &apos;Sin ATP. Instalá Mitocondria primero.&apos;
+ 
+ Apoptosis:
+ Fragmentación en 4-6 piezas que se separan (1.5s).
+ Diagnosis: &apos;NK aprendió tu firma. Pivoteá.&apos;
+ 
+ Freezing:
+ Sprite se cristaliza (tint azul helado).
+ Partículas se detienen gradualmente.
+ NO se destruye — queda como fósil.
+ Diagnosis: &apos;Frío letal. El Hongo puede farmearte.&apos;
+ 
+ OnDeathComplete():
+ EventBus.TriggerMotherDied(_deathType);
+ EventBus.TriggerMatchEnd(playerWon: false);
+ EventBus.TriggerPowerMoment(&apos;elimination&apos;);
+ Si no es Freezing: Destroy(gameObject, 0.1f);
+ 
+
+□ Los 5 tipos tienen secuencias visuales distintas
+□ MetabolicCollapse ralentiza el tiempo
+□ Freezing deja el fósil en el mapa
+□ El diagnóstico correcto se guarda para PostMatchUI
+
+ FASE 5 — IA RIVAL Y SISTEMAS DE PRESIÓN 
+
+ PROMPT 5.1 RivalCellController — IA con BehaviorProfile
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: EnemyCellAI.cs existe con deambulación básica.
+ Crear Assets/Scripts/Views/Exterior/
+ RivalCellController.cs que extiende o reemplaza la IA.
+ 
+ BEHAVIOR PROFILE por arquetipo:
+ Expansor: aggression=30, risk=40, resource=90
+ Depredador: aggression=85, risk=70, resource=30
+ Controlador: aggression=20, risk=20, resource=60
+ Adaptador: aggression=40, risk=60, resource=50
+ Raider (Flagelado): aggression=70, risk=80, resource=40
+ Suicida (Neutrófilo): aggression=95, risk=95, resource=10
+ 
+ LOOP DE DECISIÓN (InvokeRepeating cada 3.5s):
+ 
+ void AITick()
+ {
+ // PRIORIDAD 1: ATP crítico
+ if (GetATPPercent() &lt; 0.25f)
+ { SetAllDaughterDirectives(Farm); return; }
+ 
+ // PRIORIDAD 2: Madre en peligro
+ if (GetMotherHP() &lt; 0.35f &amp;&amp; risk &lt; 50)
+ { ReabsorbAllDaughters(); Defend(); return; }
+ 
+ // PRIORIDAD 3: Dividirse si es posible
+ if (CanDivide() &amp;&amp; activeDaughters &lt;
+ GetOptimalDaughterCount())
+ { DivideClosestCell(); }
+ 
+ // PRIORIDAD 4: Atacar o farmear según perfil
+ if (EnemyInRange(attackRange) &amp;&amp; aggression &gt; 50)
+ SetNearestDaughterDirective(Attack);
+ else if (resourcePriority &gt; 60)
+ SetNearestDaughterDirective(Farm);
+ }
+ 
+ int GetOptimalDaughterCount() =&gt;
+ aggression &gt; 70 ? 4 : aggression &gt; 40 ? 2 : 1;
+ 
+ DIFICULTAD (SerializeField):
+ Easy: tickInterval=6f, damageMultiplier=0.65f
+ Normal: tickInterval=3.5f, damageMultiplier=1.0f
+ Hard: tickInterval=2f, damageMultiplier=1.35f
+ 
+
+□ El BehaviorProfile varía según el arquetipo
+□ La IA farmea cuando ATP es bajo
+□ La IA se divide cuando puede
+□ La IA ataca según su nivel de agresión
+
+ PROMPT 5.2 BiomassSystem — Límite Global de Complejidad
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Core/BiomassSystem.cs
+ 
+ COMPLEJIDADES POR ORGÁNULO:
+ Nucleo=15, Mitocondria=8, Ribosoma=6, Vacuola=5,
+ Peroxisoma=6, Flagelo=10, Lisosoma=9, Granulo=9,
+ Tilacoide=11, Pared=8, Hifa=12
+ 
+ CÁLCULO en Update() cada 0.5s:
+ currentLoad = Σ(orgánolosActivos × complejidad)
+ maxBiomass = 100 (base) +
+ (hasVacuola ? 15 : 0) + (consolidated ? 15 : 0)
+ ratio = currentLoad / maxBiomass
+ 
+ EFECTOS POR RATIO (aplicar a MetabolismEngine):
+ ratio &lt; 0.70: efficiencyMultiplier = 1.0f
+ ratio 0.70-0.85: efficiencyMultiplier = 0.90f,
+ ATP pasivo −0.5/seg
+ ratio 0.85-1.0: efficiencyMultiplier = 0.75f,
+ ATP −1.5/seg, StressSystem +3/seg
+ ratio &gt;= 1.0: síntesis bloqueada, stress +8/seg,
+ orgánulos empiezan a apagarse solos (random cada 5s)
+ 
+ SOFT CAP de células (integrar con CellDivisionSystem):
+ Si _activeCells &gt; 6:
+ StressSystem.AddStressPassive(
+ (_activeCells - 6) × 0.2f per seg)
+ Si _activeCells &gt;= 10:
+ CellDivisionSystem.blockDivision = true
+ 
+ VISUAL DEL RATIO:
+ El interior celular (panel E) cambia de color:
+ ratio &lt; 0.70: fondo #050A14 (normal)
+ ratio 0.70-0.85: fondo con tinte naranja sutil
+ ratio &gt; 0.85: partículas del interior se vuelven
+ naranjas en AtmosphereParticles.cs
+ ratio &gt; 1.0: partículas rojas y erráticas
+ 
+
+□ La carga de biomasa se calcula correctamente
+□ Los 4 niveles de efecto funcionan
+□ El soft/hard cap de células funciona
+□ El visual del interior refleja el ratio
+
+ PROMPT 5.3 PremiumUnitSystem — 4 Unidades Premium
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Crear Assets/Scripts/Units/
+ PremiumUnitSystem.cs
+ 
+ CONDICIÓN DE INVOCACIÓN:
+ 1. SpecializationTracker.score &gt;= 100
+ 2. Genes de Anillo 3 activos por &gt;= 5 minutos
+ 3. ResourceManager: ATP &gt;= 150, AA &gt;= 80, NUC &gt;= 40
+ 4. Solo una unidad premium por partida
+ (_premiumInvoked == false)
+ 
+ PROCESO (8 segundos):
+ La madre no puede moverse (Stop FluidMovementSystem).
+ Pulso radial cada 1s desde la madre.
+ Al completar: crear el premium en la posición de la madre.
+ EventBus.TriggerPowerMoment(&apos;premium&apos;)
+ _premiumInvoked = true
+ 
+ LAS 4 UNIDADES (una clase por tipo):
+ 
+ Volvox (Expansor):
+ 16 sprites hijos en formación esférica.
+ Cada uno tiene HP independiente (20 HP).
+ Al perder 8 o más: disgregarse en unidades
+ individuales con directiva Attack.
+ 
+ Tardígrado (Depredador):
+ WorldSize 5× mayor. Velocity 0.3f.
+ Cryptobiosis(): invulnerable 10s, cooldown 30s.
+ Al contacto con célula rival:
+ DamageNearestSegment en TODOS los segmentos, 3 HP/s.
+ 
+ Hidra (Controlador):
+ 3 LineRenderers (tentáculos) que se extienden 3u.
+ Animación: los tentáculos ondean lentamente.
+ Al tocar célula rival: inmovilizarla 4s
+ (Stop FluidMovementSystem + SetKinematic(true)).
+ 
+ Paramecio (Adaptador):
+ Absorción de recursos ×5 en radio 0.8u.
+ Cells rivales con worldSize &lt; 0.05u en radio 1.5u:
+ aplicar fuerza hacia el Paramecio (drag hacia el surco).
+ 
+ Exponer botón InvokePremium() que verifica condiciones
+ y ejecuta el proceso.
+ 
+
+□ Las condiciones de invocación se verifican correctamente
+□ Los 8 segundos de vulnerabilidad funcionan
+□ El Volvox se disgrega al 50% de HP
+□ La criptobiosis del Tardígrado funciona
+□ Los tentáculos de la Hidra inmovilizan
+
+ FASE 6 — VICTORIA, DERROTA Y POST-PARTIDA 
+
+ PROMPT 6.1 VictoryManager — Condiciones de Victoria
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: VictoryManager.cs existe con condiciones viejas.
+ Adaptar para el GDD v4.2.
+ 
+ CONDICIÓN A — ELIMINACIÓN:
+ Suscribirse a EventBus.OnMotherDied.
+ Contar cuántos jugadores tienen madre viva.
+ Si queda 1: EventBus.TriggerMatchEnd(playerWon: true)
+ 
+ CONDICIÓN B — TIEMPO LÍMITE (minuto 35):
+ Timer en Update().
+ Al llegar a 35 minutos:
+ Calcular biomasa total de cada jugador:
+ (madre.HP + hijas.HP + nietas.HP) normalizado
+ El jugador con mayor valor: TriggerMatchEnd(true).
+ Los demás: TriggerMatchEnd(false).
+ Mostrar &apos;⏱ TIEMPO AGOTADO — Victoria por biomasa&apos;.
+ 
+ CONDICIÓN C — INANICIÓN (ATP = 0 por 60 ticks):
+ Si el rival no tiene ATP por 60 ticks seguidos:
+ Su célula madre entra en colapso metabólico.
+ DeathSystem.TriggerDeath(MetabolicCollapse).
+ 
+ FASE 4 (minuto 25) — ESCASEZ DE RECURSOS:
+ Reducir la tasa de regeneración de todos los
+ ResourceNodes al 30% de su valor normal.
+ Mostrar notificación: &apos;⚠ Recursos escaseando&apos;.
+ 
+ En FFA con múltiples jugadores:
+ Al eliminar a un jugador: sus células hijas
+ vivas se convierten en células salvajes.
+ Directiva: Attack al jugador con más biomasa visible.
+ 
+
+□ Victoria por eliminación funciona
+□ Victoria por biomasa al minuto 35 funciona
+□ Inanición activa el colapso metabólico
+□ La escasez de recursos activa al minuto 25
+□ Las células salvajes aparecen en FFA
+
+ PROMPT 6.2 PostMatchUI — Diagnóstico Post-Partida
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: PostMortemUI.cs existe. Adaptar al GDD v4.2.
+ 
+ SUSCRIBIRSE A:
+ EventBus.OnMatchEnd → ShowResult(bool playerWon)
+ EventBus.OnMotherDied → StoreDeathType(DeathType t)
+ 
+ PANEL DE VICTORIA:
+ Fondo: #0D2137 con borde de la especialización
+ Título: &apos;✓ VICTORIA&apos;
+ Especialización alcanzada + color canónico
+ Stats:
+ · Tiempo de partida
+ · Divisiones realizadas
+ · Células hijas que murieron
+ · ATP total producido
+ · Si invocó unidad premium: qué tipo
+ Botones: &apos;Jugar de nuevo&apos; | &apos;Menú principal&apos;
+ 
+ PANEL DE DERROTA:
+ Fondo: #1A0D0D con borde rojo
+ Título: &apos;DERROTA&apos;
+ Tipo de muerte con ícono:
+ Lysis: 💥 Intoxication: 🧪
+ MetabolicCollapse: ⚡ Apoptosis: 🧬 Freezing: ❄️
+ DIAGNÓSTICO en caja amarilla:
+ El texto de DeathSystem para ese tipo.
+ Mismas stats que victoria.
+ Botones: &apos;Intentar de nuevo&apos; | &apos;Menú principal&apos;
+ 
+
+□ Panel de victoria muestra stats correctas
+□ Panel de derrota muestra el tipo de muerte
+□ El diagnóstico específico aparece en la caja amarilla
+
+ FASE 7 — BALANCE, MAPA Y PLAYTEST FINAL 
+
+ PROMPT 7.1 Balance y Playtest — Partida Completa
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: Todos los sistemas anteriores implementados.
+ 
+ OBJETIVO: Verificar el flujo completo de una partida.
+ 
+ FLUJO A VERIFICAR (en orden):
+ 1. Iniciar partida → vista exterior activa
+ 2. Hint &apos;Presioná G → instalá el NÚCLEO&apos; visible
+ 3. Abrir G → solo el Núcleo disponible
+ 4. Instalar Núcleo → hint cambia
+ 5. Instalar Mitocondria + Ribosoma → fase Specializing
+ 6. Instalar Flagelo → sprite de la célula cambia
+ 7. La barra de especialización sube hacia Flagelado
+ 8. ATP acumulado → intentar dividirse (atajar con D o botón)
+ 9. La división ocurre con animación correcta
+ 10. La hija tiene ícono ⚪ (Seguirme)
+ 11. Tab cicla entre madre y hija
+ 12. Cambiar directiva de la hija a 🔵 Farmear
+ 13. La hija va al nodo de recursos más cercano
+ 14. Al minuto 5-8: specialization consolida
+ 15. Power Moment: flash + texto + audio
+ 16. El rival aparece y tiene comportamiento de su arquetipo
+ 17. Al contacto: daño en los segmentos de membrana
+ 18. Los segmentos cambian de color según daño
+ 19. Tipos de muerte funcionan al perder
+ 20. PostMatchUI muestra diagnóstico correcto
+ 
+ PARÁMETROS A AJUSTAR PARA BALANCE:
+ Si partida &lt; 15 min: reducir daño de Bacteriocinas
+ de 2 a 1.5 HP/seg, aumentar HP por segmento a 25
+ Si jugador siempre pierde: aiTickInterval = 5f,
+ damageMultiplier = 0.6f
+ Si ATP colapsa en minuto 2: atpInitial = 180f
+ Si nunca se divide: reducir costo base de 40 a 30 ATP
+ 
+ META: partida de 20-35 minutos, resultado no predecible.
+ 
+
+□ El flujo de 20 pasos funciona sin crashes
+□ La partida dura entre 20 y 35 minutos
+□ Los parámetros de balance están expuestos en el Inspector
+□ No hay errores de referencia nula en la consola
+
+ PROMPT 7.2 FogOfWar + Memoria Química del Mapa
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: FogOfWar.cs existe y tiene buena arquitectura.
+ Verificar que está activo y agregar la memoria química.
+ 
+ VERIFICACIÓN DE FOG OF WAR:
+ 1. En ExteriorView.cs: fogOfWar no debe ser null.
+ Si es null: GetComponentInChildren&lt;FogOfWar&gt;(true).
+ 2. FogOfWar debe tener referencia al jugador:
+ _playerTransform = PlayerCellExterior.Instance
+ .transform (actualizar cada frame en Update).
+ 3. hiddenAlpha = 0.88f, exploredAlpha = 0.0f.
+ 4. baseVisionRadius = 4.0f para la madre.
+ Para hijas: 2.5f (menor radio).
+ 5. Las células hijas también revelan niebla.
+ Agregar al sistema: foreach célula propia activa:
+ RevealArea(celda.position, radio).
+ 
+ MEMORIA QUÍMICA (nuevo en v4.2):
+ Crear una Texture2D separada del FogOfWar.
+ Resolución: 64×64 sobre el mapa.
+ Cuando una célula propia se mueve:
+ Pintar un punto del color de la especialización
+ (alpha 0.15) en la posición correspondiente.
+ El punto decae en alpha 0.005 por frame hasta 0.
+ El resultado: rastro de movimiento visible como
+ niebla tenue del color de la especialización.
+ 
+ Para los rivales: si el jugador tiene Gen Reconocimiento
+ activo (Anillo 2, Gene2), también puede ver el
+ rastro químico de las células rivales cercanas (&lt; 6u).
+ 
+
+□ FogOfWar activo y revelando alrededor de todas las células
+□ La memoria química deja rastro visible
+□ Con Gen Reconocimiento se ve el rastro del rival
+
+ PROMPT 7.3 Mapa Circular con Zonas Estratégicas
+
+ ▶ COPIAR EN CLAUDE CODE
+ CONTEXTO: ExteriorMap.cs gestiona el mapa.
+ 
+ OBJETIVO: Asegurarse de que el mapa tiene zonas
+ con efectos reales según el GDD v4.2.
+ 
+ COLORES DE ZONA (NUNCA verde — siempre azul-gris):
+ Fótica: new Color(0.47f, 0.62f, 0.72f) #789DB8
+ Pelágica: new Color(0.42f, 0.56f, 0.64f) #6B8FA3
+ Béntica: new Color(0.28f, 0.40f, 0.50f) #476680
+ Detritus: new Color(0.35f, 0.47f, 0.56f) #59778F
+ Ácida: new Color(0.28f, 0.34f, 0.42f) #47566A
+ 
+ EFECTOS POR ZONA (aplicar al entrar):
+ Fótica: si tiene Tilacoide + Gen Fotosíntesis:
+ +2 ATP/seg bonus.
+ Si tiene gen anaerobio: +4 stress/seg.
+ 
+ Béntica: si NO es Arquea:
+ −0.5 ATP/seg. Daño a fotosintéticos +1 HP/seg.
+ 
+ Ácida (parche): si NO es Arquea:
+ +2 HP/seg daño a segmentos. +3 stress/seg.
+ 
+ Detritus: si es Hongo:
+ ×2 velocidad de absorción de recursos.
+ 
+ TRANSICIÓN DE ZONA:
+ IEnumerator TransitionZoneColor(Color target):
+ Lerp de Camera.backgroundColor en 1.5s.
+ No snap instantáneo.
+ 
+ LAYOUT CIRCULAR:
+ Verificar que el mapa tiene 3 anillos:
+ Exterior: zonas de inicio con muro químico 5 min.
+ Medio: campo de batalla principal.
+ Centro: nodo de ATP premium (+3 ATP/seg al controlador).
+ 
+
+□ Las 5 zonas tienen los colores correctos (nunca verde)
+□ Los efectos por zona funcionan correctamente
+□ La transición de color es suave
+□ El nodo central da +3 ATP/seg al controlador

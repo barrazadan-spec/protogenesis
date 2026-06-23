@@ -1,0 +1,50 @@
+# Unity generated folders
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# IDE and generated solution files
+/.vs/
+/.vscode/
+/.idea/
+*.csproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files and logs
+*.tmp
+*.log
+*.bak
+*.swp
+*.stackdump
+~$*
+.~lock.*
+
+# Local backups and generated review artifacts
+/*.zip
+/Captures/
+/_render*/
+/_merge*/
+/_manual_pdf_test/
+
+# Local assistant configuration
+/.agents/
+/.claude/
+
+# Keep Unity .meta files tracked. They contain asset GUIDs.
+!*.meta

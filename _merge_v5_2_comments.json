@@ -1,0 +1,130 @@
+{
+  "file": "C:\\Users\\barra\\OneDrive\\Desktop\\PROYECTO PROTOGENESIS IA\\Protogenesis_GDD_v5_2_MERGE_Ecosystem_Roster.docx",
+  "comment_count": 6,
+  "comments": [
+    {
+      "id": "0",
+      "author": "Codex",
+      "date": "2026-04-28T04:28:49Z",
+      "initials": null,
+      "resolved": false,
+      "text": "REVISAR: catalasa puede funcionar como enzima/base procariota, pero peroxisoma es organulo eucariota; conviene separar ambas estructuras.",
+      "anchors": [
+        {
+          "part": "word/document.xml",
+          "paragraphs": [
+            {
+              "where": "start",
+              "text": "Catalasa/peroxisoma, difusion"
+            },
+            {
+              "where": "end",
+              "text": "Catalasa/peroxisoma, difusion"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1",
+      "author": "Codex",
+      "date": "2026-04-28T04:28:49Z",
+      "initials": null,
+      "resolved": false,
+      "text": "REVISAR: justificar endosimbiosis/adquisicion de cloroplasto en una partida o tratarlo como abstraccion/desbloqueo.",
+      "anchors": [
+        {
+          "part": "word/document.xml",
+          "paragraphs": [
+            {
+              "where": "start",
+              "text": "Fotosintesis organelar"
+            },
+            {
+              "where": "end",
+              "text": "Fotosintesis organelar"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "author": "Codex",
+      "date": "2026-04-28T04:28:49Z",
+      "initials": null,
+      "resolved": false,
+      "text": "REVISAR: neutrofilo, macrofago, NK y celula B son arquetipos inspirados en inmunologia multicelular; decidir si son lore avanzado o rutas literales.",
+      "anchors": []
+    },
+    {
+      "id": "3",
+      "author": "Codex",
+      "date": "2026-04-28T04:28:49Z",
+      "initials": null,
+      "resolved": false,
+      "text": "REVISAR: salto multicelular/macroscopico fuerte; confirmar si queda como apex fantastico, neutral raro o se reemplaza por quiste/colonia.",
+      "anchors": [
+        {
+          "part": "word/document.xml",
+          "paragraphs": [
+            {
+              "where": "start",
+              "text": "Volvox/Paramecio/Hidra/Tardigrado"
+            },
+            {
+              "where": "end",
+              "text": "Volvox/Paramecio/Hidra/Tardigrado"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "author": "Codex",
+      "date": "2026-04-28T04:28:49Z",
+      "initials": null,
+      "resolved": false,
+      "text": "REVISAR: x5 puede ser demasiado explosivo; probar x2-x3 inicial y escalado por memoria.",
+      "anchors": [
+        {
+          "part": "word/document.xml",
+          "paragraphs": [
+            {
+              "where": "start",
+              "text": "Primer contacto aprende firma; luego x5 daño vs ese tipo."
+            },
+            {
+              "where": "end",
+              "text": "Primer contacto aprende firma; luego x5 daño vs ese tipo."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "author": "Codex",
+      "date": "2026-04-28T04:28:49Z",
+      "initials": null,
+      "resolved": false,
+      "text": "REVISAR: regla util de balance, pero conviene justificarla por difusion/competencia local para que no parezca artificial.",
+      "anchors": [
+        {
+          "part": "word/document.xml",
+          "paragraphs": [
+            {
+              "where": "start",
+              "text": "Blob penalty"
+            },
+            {
+              "where": "end",
+              "text": "Blob penalty"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
