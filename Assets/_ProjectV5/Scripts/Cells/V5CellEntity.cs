@@ -1238,13 +1238,14 @@ namespace Protogenesis.V5
             if (EvolutionPath == V5EvolutionPath.Uncommitted) c = V5Colors.LUCA;
             if (IsPlayerOwned && !isMother) c = Color.Lerp(c, V5CasteLibrary.Get(FunctionalCaste).primaryColor, 0.52f);
             if (isMother) c = Color.Lerp(c, new Color(0.35f, 1f, 0.92f, 1f), 0.35f);
-            if (!IsPlayerOwned) c = IsCoreNeutral ? Color.Lerp(c, new Color(0.92f, 0.78f, 0.36f, 1f), 0.42f) : Color.Lerp(c, Color.red, 0.35f);
-            if (Selected) c = Color.Lerp(c, V5Colors.Selected, 0.45f);
+            if (!IsPlayerOwned) c = IsCoreNeutral ? Color.Lerp(c, new Color(1f, 0.78f, 0.20f, 1f), 0.62f) : Color.Lerp(c, new Color(1f, 0.06f, 0.04f, 1f), 0.58f);
             if (IsAttachedToBody) c = Color.Lerp(c, new Color(0.78f, 1f, 0.95f, 1f), 0.25f);
             if (IsMorphedOrganism)
                 c = Color.Lerp(c, MorphRoleTint(), MorphPartRole == V5MorphPartRole.Body ? 0.46f : 0.64f);
             if (!IsPlayerOwned && IsMorphedOrganism) c = IsCoreNeutral ? Color.Lerp(c, new Color(1f, 0.78f, 0.22f, 1f), 0.58f) : Color.Lerp(c, new Color(1f, 0.05f, 0.03f, 1f), 0.58f);
+            if (IsPlayerOwned && !isMother) c = Color.Lerp(c, new Color(0.35f, 0.62f, 1f, 1f), 0.58f);
             if (Stats.currentHp < Stats.maxHp * 0.3f) c = Color.Lerp(c, Color.red, 0.55f);
+            if (Selected) c = Color.Lerp(c, V5Colors.Selected, 0.45f);
             float pulse = 1f + Mathf.Sin(Time.time * 2.3f + visualPhase) * 0.035f;
             spriteRenderer.color = isMother ? new Color(c.r, c.g, c.b, 0f) : c;
             spriteRenderer.sortingOrder = isMother ? 12 : 10;

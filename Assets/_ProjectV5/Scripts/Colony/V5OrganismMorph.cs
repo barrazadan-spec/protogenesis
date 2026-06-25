@@ -55,6 +55,7 @@ namespace Protogenesis.V5
         public const float MorphAssemblySecondsPerCell = 0.15f;
         private const float MinMorphAssemblySeconds = 0.8f;
         private const float EngulfCooldown = 0.6f;
+        private const float RangedAttackFeedbackInterval = 0.12f;
 
         private enum PlayerOrderState { None, Move, Attack, AttackMove, Farm, Hold }
 
@@ -186,6 +187,7 @@ namespace Protogenesis.V5
         private float morphStartedAt;
         private float organismAngle;
         private float lastEngulfTime = float.NegativeInfinity;
+        private float lastRangedAttackFeedbackTime = float.NegativeInfinity;
         private V5CellEntity nucleusCell;
         private bool isRuntimeInstance;
         private bool isEnemyOrganism;
@@ -510,9 +512,9 @@ namespace Protogenesis.V5
             blueprint.ForceAllBodyRoles = true;
             blueprint.FormationRadiusX = 1.35f;
             blueprint.FormationRadiusY = 1.15f;
-            blueprint.BaseMoveSpeed = 1.1f;
+            blueprint.BaseMoveSpeed = 2.6f;
             blueprint.LegMoveSpeedPerCell = 0f;
-            blueprint.MaxMoveSpeed = 1.9f;
+            blueprint.MaxMoveSpeed = 3.4f;
             blueprint.BodyHpPerCell = 7f;
             blueprint.BodyResistancePerCell = 0.008f;
             blueprint.PassiveBiomassPerCellPerSecond = 0f;
@@ -577,7 +579,7 @@ namespace Protogenesis.V5
             blueprint.CombatDamageMultiplier = 0.35f;
             blueprint.MemberMaxHpMultiplier = 0.75f;
             blueprint.AttackRange = 7f;
-            blueprint.RangedDamagePerSecond = 6f;
+            blueprint.RangedDamagePerSecond = 10f;
             blueprint.DamageKind = V5DamageKind.Piercing;
             blueprint.Armor = 0f;
             return blueprint;
@@ -2386,7 +2388,7 @@ namespace Protogenesis.V5
         private bool IsEnemyTouchingOrganism(V5CellEntity enemy, V5CellEntity anchorCell, float organismRadius)
         {
             if (enemy == null || anchorCell == null) return false;
-            float envelope = organismRadius + enemy.Stats.radius + 0.18f;
+            float envelope = organismRadius + enemy.Stats.radius + 0.65f;
             return Vector2.SqrMagnitude((Vector2)enemy.transform.position - (Vector2)anchorCell.transform.position) <= envelope * envelope;
         }
 
@@ -2430,7 +2432,30 @@ namespace Protogenesis.V5
 
             Vector2 source = nucleus.transform.position;
             if (Vector2.SqrMagnitude((Vector2)target.transform.position - source) > range * range) return;
-            target.Damage(damagePerSecond * Time.deltaTime, blueprint.DamageKind, source);
+            float damage = damagePerSecond * Time.deltaTime;
+            target.Damage(damage, blueprint.DamageKind, source);
+
+            if (Time.time >= lastRangedAttackFeedbackTime + RangedAttackFeedbackInterval)
+            {
+                lastRangedAttackFeedbackTime = Time.time;
+                Vector2 targetPosition = target.transform.position;
+                Vector2 beamSource = RangedBeamSource(nucleus, targetPosition);
+                V5RangedAttackBeam.Spawn(beamSource, targetPosition, new Color(0.68f, 0.91f, 0.94f, 0.90f), 0.12f);
+
+                V5FeedbackSystem feedback = FindFirstObjectByType<V5FeedbackSystem>();
+                if (feedback != null)
+                    feedback.PushFloating("perfora " + Mathf.Max(0.1f, damagePerSecond * RangedAttackFeedbackInterval).ToString("0.0"), targetPosition + Vector2.up * 0.35f, new Color(0.78f, 0.95f, 1f, 1f));
+            }
+        }
+
+        private Vector2 RangedBeamSource(V5CellEntity nucleus, Vector2 targetPosition)
+        {
+            if (nucleus == null) return targetPosition;
+            Vector2 anchor = nucleus.transform.position;
+            Vector2 direction = targetPosition - anchor;
+            if (direction.sqrMagnitude < 0.0001f) direction = Rotate(Vector2.right, organismAngle);
+            else direction.Normalize();
+            return anchor + direction * Mathf.Max(0.45f, ActiveFormationRadiusX() * 0.82f);
         }
 
         private bool IsValidRangedTarget(V5CellEntity target)
@@ -3357,6 +3382,87 @@ namespace Protogenesis.V5
             }
 
             if (age >= duration) Destroy(gameObject);
+        }
+    }
+
+    public class V5RangedAttackBeam : MonoBehaviour
+    {
+        private static Material sharedLineMaterial;
+
+        private LineRenderer line;
+        private Color color;
+        private Vector2 from;
+        private Vector2 to;
+        private Vector2 normal;
+        private float duration = 0.12f;
+        private float age;
+
+        public static void Spawn(Vector2 from, Vector2 to, Color beamColor, float seconds)
+        {
+            GameObject go = new GameObject("V5_RangedAttackBeam");
+            V5RangedAttackBeam beam = go.AddComponent<V5RangedAttackBeam>();
+            beam.Initialize(from, to, beamColor, seconds);
+        }
+
+        private void Initialize(Vector2 from, Vector2 to, Color beamColor, float seconds)
+        {
+            this.from = from;
+            this.to = to;
+            Vector2 direction = to - from;
+            normal = direction.sqrMagnitude > 0.0001f ? new Vector2(-direction.y, direction.x).normalized : Vector2.up;
+            duration = Mathf.Max(0.03f, seconds);
+            color = beamColor;
+            line = gameObject.AddComponent<LineRenderer>();
+            line.positionCount = 4;
+            line.useWorldSpace = true;
+            for (int i = 0; i < line.positionCount; i++) line.SetPosition(i, new Vector3(from.x, from.y, -0.05f));
+            line.startWidth = 0.20f;
+            line.endWidth = 0.10f;
+            line.numCapVertices = 5;
+            line.numCornerVertices = 3;
+            line.sortingOrder = 42;
+            line.material = LineMaterial();
+            line.startColor = color;
+            line.endColor = new Color(color.r, color.g, color.b, color.a * 0.72f);
+        }
+
+        private void Update()
+        {
+            age += Time.deltaTime;
+            float t = Mathf.Clamp01(age / duration);
+            if (line != null)
+            {
+                float extend = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(t / 0.42f));
+                float retract = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((t - 0.58f) / 0.42f));
+                Vector2 start = Vector2.Lerp(from, to, retract);
+                Vector2 end = Vector2.Lerp(from, to, extend);
+                float bend = Mathf.Sin(Mathf.Clamp01(extend - retract) * Mathf.PI) * 0.10f;
+                for (int i = 0; i < line.positionCount; i++)
+                {
+                    float p = i / (float)(line.positionCount - 1);
+                    Vector2 point = Vector2.Lerp(start, end, p) + normal * (Mathf.Sin(p * Mathf.PI) * bend);
+                    line.SetPosition(i, new Vector3(point.x, point.y, -0.05f));
+                }
+
+                float alpha = Mathf.Lerp(color.a, 0f, Mathf.Clamp01((t - 0.72f) / 0.28f));
+                line.startColor = new Color(color.r, color.g, color.b, alpha);
+                line.endColor = new Color(color.r, color.g, color.b, alpha * 0.72f);
+                float width = Mathf.Lerp(0.20f, 0.08f, Mathf.Clamp01((t - 0.68f) / 0.32f));
+                line.startWidth = width;
+                line.endWidth = width * 0.55f;
+            }
+            if (t >= 1f) Destroy(gameObject);
+        }
+
+        private static Material LineMaterial()
+        {
+            if (sharedLineMaterial != null) return sharedLineMaterial;
+            Shader shader = Shader.Find("Sprites/Default");
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Unlit");
+            if (shader == null) shader = Shader.Find("Unlit/Color");
+            sharedLineMaterial = new Material(shader);
+            sharedLineMaterial.hideFlags = HideFlags.HideAndDontSave;
+            return sharedLineMaterial;
         }
     }
 }
