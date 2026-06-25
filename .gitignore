@@ -45,6 +45,3 @@ Desktop.ini
 # Local assistant configuration
 /.agents/
 /.claude/
-
-# Keep Unity .meta files tracked. They contain asset GUIDs.
-!*.meta

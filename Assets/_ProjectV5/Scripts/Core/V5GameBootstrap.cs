@@ -176,6 +176,7 @@ namespace Protogenesis.V5
             gm.OrganismMorph.MaxActiveOrganisms = Mathf.Max(gm.OrganismMorph.MaxActiveOrganisms, V5OrganismMorph.DefaultMaxActiveOrganisms);
             gm.CoreTerritory = GetOrCreate<V5CoreTerritorySystem>("V5_CoreTerritory");
             gm.CoreMotherProduction = GetOrCreate<V5CoreMotherProductionSystem>("V5_CoreMotherProduction");
+            V5CoreLightOasisSystem lightOases = GetOrCreate<V5CoreLightOasisSystem>("V5_CoreLightOases");
             GetOrCreate<V5CoreRivalColonySystem>("V5_CoreRivalColony");
             GetOrCreate<V5CoreNeutralCampSystem>("V5_CoreNeutralCamps");
             GetOrCreate<V5CorePredatorSystem>("V5_CorePredatorSystem");
@@ -207,6 +208,7 @@ namespace Protogenesis.V5
             V5CellEntity mother = gm.CellFactory.SpawnMother(motherStart);
             if (gm.CoreMotherProduction != null) gm.CoreMotherProduction.SeedStartingCells(gm, 3);
             if (gm.CameraController != null) gm.CameraController.SnapTo(mother != null ? mother.transform : null);
+            lightOases.Build(gm, motherStart);
             gm.Resources.SpawnInitialNodes();
             SpawnCoreBaseResources(gm, motherStart, 18);
             gm.ResetAllRunSystems();

@@ -31,6 +31,12 @@ namespace Protogenesis.V5
                 gm.Environment.Initialize(width, height, def.tileSize, Mathf.Min(width, height) * def.tileSize * 0.47f);
                 gm.Environment.ApplyScenarioBias(def);
             }
+            Vector2 motherStart = gm.CoreMode && gm.Environment != null ? Vector2.left * gm.Environment.MapRadius * 0.72f : Vector2.zero;
+            if (gm.CoreMode)
+            {
+                V5CoreLightOasisSystem lightOases = FindFirstObjectByType<V5CoreLightOasisSystem>();
+                if (lightOases != null) lightOases.Build(gm, motherStart);
+            }
             if (gm.Resources != null)
             {
                 gm.Resources.InitialNodeCount = gm.CoreMode ? Mathf.Clamp(def.startingResources, 62, 78) : def.startingResources;
@@ -39,7 +45,6 @@ namespace Protogenesis.V5
 
             if (gm.CellFactory != null)
             {
-                Vector2 motherStart = gm.CoreMode && gm.Environment != null ? Vector2.left * gm.Environment.MapRadius * 0.72f : Vector2.zero;
                 gm.CellFactory.SpawnMother(motherStart);
                 if (gm.CoreMode && gm.CoreMotherProduction != null) gm.CoreMotherProduction.SeedStartingCells(gm, 3);
                 if (gm.CoreMode && gm.Resources != null) SpawnCoreBaseResources(gm, motherStart, 18);

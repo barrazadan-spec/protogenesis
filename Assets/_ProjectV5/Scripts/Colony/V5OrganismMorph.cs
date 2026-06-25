@@ -52,6 +52,8 @@ namespace Protogenesis.V5
         public const int LacrymariaRequiredFreeCells = 20;
         public const int VolvoxRequiredFreeCells = 22;
         public const int TardigradeRequiredFreeCells = 50;
+        public const float MorphAssemblySecondsPerCell = 0.15f;
+        private const float MinMorphAssemblySeconds = 0.8f;
         private const float EngulfCooldown = 0.6f;
 
         private enum PlayerOrderState { None, Move, Attack, AttackMove, Farm, Hold }
@@ -118,6 +120,7 @@ namespace Protogenesis.V5
         public float CurrentPassiveBiomassPerSecond { get; private set; }
         public float MorphFlow01 { get; private set; }
         public float OrganismAngleDegrees { get { return organismAngle; } }
+        public bool IsAssembling { get { return IsPlayerAssemblyInProgress(); } }
         public float Health01 { get { return OrganismMaxHp() <= 0f ? 0f : Mathf.Clamp01(OrganismCurrentHp() / OrganismMaxHp()); } }
         public float EffectiveCombatDamagePerSecond
         {
@@ -191,6 +194,7 @@ namespace Protogenesis.V5
         private Vector2 neutralRoamCenter;
         private float neutralRoamRadius = 7f;
         private float nextNeutralWanderAt;
+        private bool assemblyNucleusLost;
         private bool enemyRewardIssued;
         private int enemyRewardCells;
         private bool isMorphed;
@@ -856,6 +860,11 @@ namespace Protogenesis.V5
             }
 
             if (!IsMorphed) return;
+            if (IsPlayerAssemblyInProgress())
+            {
+                LastMessage = ActiveBlueprintName + " sigue ensamblandose (" + Mathf.RoundToInt(MorphFlow01 * 100f) + "%).";
+                return;
+            }
             moveTarget = target;
             hasMoveTarget = true;
             hasHoldPosition = false;
@@ -884,6 +893,11 @@ namespace Protogenesis.V5
             }
 
             if (!IsMorphed || target == null) return;
+            if (IsPlayerAssemblyInProgress())
+            {
+                LastMessage = ActiveBlueprintName + " sigue ensamblandose (" + Mathf.RoundToInt(MorphFlow01 * 100f) + "%).";
+                return;
+            }
             if (playerAttackTarget != target) hasRangedStandoff = false;
             playerOrder = PlayerOrderState.Attack;
             playerAttackTarget = target;
@@ -913,6 +927,11 @@ namespace Protogenesis.V5
             }
 
             if (!IsMorphed) return;
+            if (IsPlayerAssemblyInProgress())
+            {
+                LastMessage = ActiveBlueprintName + " sigue ensamblandose (" + Mathf.RoundToInt(MorphFlow01 * 100f) + "%).";
+                return;
+            }
             playerOrder = PlayerOrderState.AttackMove;
             playerAttackTarget = null;
             playerAttackMoveTarget = target;
@@ -943,6 +962,11 @@ namespace Protogenesis.V5
             }
 
             if (!IsMorphed) return;
+            if (IsPlayerAssemblyInProgress())
+            {
+                LastMessage = ActiveBlueprintName + " sigue ensamblandose (" + Mathf.RoundToInt(MorphFlow01 * 100f) + "%).";
+                return;
+            }
             playerOrder = PlayerOrderState.Farm;
             playerAttackTarget = null;
             hasRangedStandoff = false;
@@ -1002,6 +1026,7 @@ namespace Protogenesis.V5
             }
 
             if (cell == null) return;
+            if (cell == nucleusCell && IsPlayerAssemblyInProgress()) assemblyNucleusLost = true;
             if (cell == nucleusCell) nucleusCell = null;
             int index = members.IndexOf(cell);
             if (index >= 0) RemoveMemberAt(index);
@@ -1446,6 +1471,7 @@ namespace Protogenesis.V5
             playerAttackTarget = null;
             ResetPartCounters();
             MorphFlow01 = 0f;
+            assemblyNucleusLost = false;
             V5OrganismBlueprintDefinition blueprint = GetActiveBlueprint();
             List<MorphSlot> silhouetteSlots = BuildSilhouetteSlots(RequiredFreeCells);
             bool[] usedSlots = new bool[silhouetteSlots.Count];
@@ -1476,9 +1502,17 @@ namespace Protogenesis.V5
             IsMorphed = true;
             hasMoveTarget = false;
             morphStartedAt = Time.time;
+            MorphFlowSeconds = (isEnemyOrganism || isNeutralOrganism)
+                ? 0.05f
+                : Mathf.Max(MinMorphAssemblySeconds, blueprint.RequiredFreeCells * MorphAssemblySecondsPerCell);
+            if (isEnemyOrganism || isNeutralOrganism)
+            {
+                morphStartedAt -= MorphFlowSeconds;
+                MorphFlow01 = 1f;
+            }
             organismAngle = 0f;
             RefreshLivePartState();
-            LastMessage = BlueprintName + " formado con silueta " + (UsingTemporarySilhouette ? "temporal" : "PNG") + ": " + members.Count + " celulas.";
+            LastMessage = (isEnemyOrganism || isNeutralOrganism ? BlueprintName + " formado" : BlueprintName + " ensamblando en " + MorphFlowSeconds.ToString("0.0") + "s") + " con silueta " + (UsingTemporarySilhouette ? "temporal" : "PNG") + ": " + members.Count + " celulas.";
             if (!isEnemyOrganism) SelectOrganism(false);
             return true;
         }
@@ -1539,6 +1573,7 @@ namespace Protogenesis.V5
             playerOrder = PlayerOrderState.None;
             playerAttackTarget = null;
             MorphFlow01 = 0f;
+            assemblyNucleusLost = false;
             ResetPartCounters();
             LastMessage = BlueprintName + " revertido: " + survivorCount + " libres, " + deadCount + " perdidas.";
             if (gm != null && gm.Selection != null) gm.Selection.ClearSelection();
@@ -1556,6 +1591,11 @@ namespace Protogenesis.V5
             }
 
             RefreshLivePartState();
+            if (assemblyNucleusLost && IsPlayerAssemblyInProgress())
+            {
+                DissolveFailedAssembly("nucleo perdido durante ensamblaje");
+                return;
+            }
             if (members.Count == 0)
             {
                 ForceClear();
@@ -1572,6 +1612,12 @@ namespace Protogenesis.V5
             {
                 bank = nucleus;
                 if (isEnemyOrganism) EnsureEnemyBrain();
+            }
+
+            if (IsPlayerAssemblyInProgress())
+            {
+                TickPlayerAssembly(nucleus);
+                return;
             }
 
             if (!isEnemyOrganism && !isNeutralOrganism && playerOrder == PlayerOrderState.None)
@@ -1725,6 +1771,47 @@ namespace Protogenesis.V5
 
             if (hasRangedStandoff) nucleus.transform.position = rangedStandoffPosition;
             nucleus.transform.position = ClampOrganismInsideMap(nucleus.transform.position);
+            UpdateMorphFormation(nucleus);
+
+            TickCollectorAutofarm(gm, nucleus, false);
+            ApplyPassiveBlueprintProduction(bank);
+            ApplyInterdictorToxicAura(gm, nucleus);
+            ApplyRangedAttack(gm, nucleus);
+            EngulfTouchingBiomass(gm, nucleus, bank);
+            EngulfTouchingEnemies(gm, nucleus, bank);
+            if (members.Count == 0) ForceClear();
+        }
+
+        private bool IsPlayerAssemblyInProgress()
+        {
+            return isRuntimeInstance && IsMorphed && !isEnemyOrganism && !isNeutralOrganism && MorphFlow01 < 0.999f;
+        }
+
+        private void TickPlayerAssembly(V5CellEntity nucleus)
+        {
+            if (nucleus == null) return;
+            hasMoveTarget = false;
+            playerOrder = PlayerOrderState.None;
+            playerAttackTarget = null;
+            hasRangedStandoff = false;
+
+            if (!hasHoldPosition)
+            {
+                holdPosition = ClampOrganismInsideMap(nucleus.transform.position);
+                hasHoldPosition = true;
+            }
+
+            holdPosition = ClampOrganismInsideMap(holdPosition);
+            nucleus.transform.position = holdPosition;
+            nucleus.AttackTarget = null;
+            nucleus.Directive = V5Directive.Move;
+            nucleus.DirectiveTarget = holdPosition;
+            UpdateMorphFormation(nucleus);
+        }
+
+        private void UpdateMorphFormation(V5CellEntity nucleus)
+        {
+            if (nucleus == null) return;
             Vector2 anchor = nucleus.transform.position;
             nucleus.transform.rotation = Quaternion.Euler(0f, 0f, organismAngle);
             MorphFlow01 = Mathf.Clamp01((Time.time - morphStartedAt) / Mathf.Max(0.05f, MorphFlowSeconds));
@@ -1740,14 +1827,6 @@ namespace Protogenesis.V5
                 cell.MoveMorphedToSlot(slot, FormationFollowSpeed);
                 cell.SetSelected(cell.Selected);
             }
-
-            TickCollectorAutofarm(gm, nucleus, false);
-            ApplyPassiveBlueprintProduction(bank);
-            ApplyInterdictorToxicAura(gm, nucleus);
-            ApplyRangedAttack(gm, nucleus);
-            EngulfTouchingBiomass(gm, nucleus, bank);
-            EngulfTouchingEnemies(gm, nucleus, bank);
-            if (members.Count == 0) ForceClear();
         }
 
         private void TickNeutralRoaming(V5CellEntity nucleus)
@@ -1816,6 +1895,7 @@ namespace Protogenesis.V5
 
             float width = Mathf.Clamp(34f + members.Count * 0.45f, 38f, 74f);
             float height = 6f;
+            bool assembling = IsPlayerAssemblyInProgress();
             Rect bg = new Rect(screen.x - width * 0.5f, Screen.height - screen.y, width, height);
             float hp01 = Health01;
             Color previous = GUI.color;
@@ -1823,8 +1903,19 @@ namespace Protogenesis.V5
             GUI.DrawTexture(bg, Texture2D.whiteTexture);
             GUI.color = Color.Lerp(new Color(1f, 0.18f, 0.12f, 0.95f), new Color(0.34f, 1f, 0.42f, 0.95f), hp01);
             GUI.DrawTexture(new Rect(bg.x + 1f, bg.y + 1f, Mathf.Max(0f, (bg.width - 2f) * hp01), bg.height - 2f), Texture2D.whiteTexture);
+            if (assembling)
+            {
+                Rect progressBg = new Rect(bg.x, bg.y + 8f, bg.width, bg.height);
+                GUI.color = new Color(0.03f, 0.025f, 0.01f, 0.84f);
+                GUI.DrawTexture(progressBg, Texture2D.whiteTexture);
+                GUI.color = new Color(1f, 0.76f, 0.22f, 0.96f);
+                GUI.DrawTexture(new Rect(progressBg.x + 1f, progressBg.y + 1f, Mathf.Max(0f, (progressBg.width - 2f) * MorphFlow01), progressBg.height - 2f), Texture2D.whiteTexture);
+            }
             GUI.color = new Color(0.86f, 1f, 0.9f, 0.95f);
-            GUI.Label(new Rect(bg.x - 8f, bg.y - 14f, bg.width + 16f, 14f), ActiveBlueprintName + " " + Mathf.RoundToInt(hp01 * 100f) + "%");
+            string label = assembling
+                ? ActiveBlueprintName + " armando " + Mathf.RoundToInt(MorphFlow01 * 100f) + "%"
+                : ActiveBlueprintName + " " + Mathf.RoundToInt(hp01 * 100f) + "%";
+            GUI.Label(new Rect(bg.x - 8f, bg.y - 14f, bg.width + 44f, 14f), label);
             GUI.color = previous;
         }
 
@@ -1871,6 +1962,7 @@ namespace Protogenesis.V5
                 playerAttackTarget = null;
                 MorphFlow01 = 0f;
                 CurrentPassiveBiomassPerSecond = 0f;
+                assemblyNucleusLost = false;
                 ResetPartCounters();
                 DisposeRuntimeInstance();
                 return;
@@ -1896,6 +1988,7 @@ namespace Protogenesis.V5
             playerAttackTarget = null;
             MorphFlow01 = 0f;
             CurrentPassiveBiomassPerSecond = 0f;
+            assemblyNucleusLost = false;
             ResetPartCounters();
             DisposeRuntimeInstance();
         }
@@ -1991,8 +2084,66 @@ namespace Protogenesis.V5
             if (members.Count >= threshold) return;
 
             LastMessage = BlueprintName + " colapso: quedan " + members.Count + "/" + ActiveRequiredFreeCells + " celulas.";
+            if (IsPlayerAssemblyInProgress())
+            {
+                DissolveFailedAssembly("demasiado dano durante ensamblaje");
+                return;
+            }
             if (isEnemyOrganism || isNeutralOrganism) ForceClear();
             else Revert();
+        }
+
+        private void DissolveFailedAssembly(string reason)
+        {
+            if (!isRuntimeInstance) return;
+
+            V5GameManager gm = V5GameManager.Instance;
+            Vector2 center = nucleusCell != null ? (Vector2)nucleusCell.transform.position : (Vector2)transform.position;
+            List<V5CellEntity> doomed = new List<V5CellEntity>(members);
+            for (int i = 0; i < doomed.Count; i++)
+            {
+                V5CellEntity cell = doomed[i];
+                if (cell == null) continue;
+                int index = members.IndexOf(cell);
+                if (index >= 0) RestoreBlueprintSlotStats(cell, index);
+                cell.ClearOrganismMorphSlot();
+                cell.SetSelected(false);
+            }
+
+            members.Clear();
+            slotOffsets.Clear();
+            startOffsets.Clear();
+            slotRoles.Clear();
+            originalMaxHp.Clear();
+            originalPhysicalArmor.Clear();
+            originalAttackRange.Clear();
+            nucleusCell = null;
+            IsMorphed = false;
+            hasMoveTarget = false;
+            playerOrder = PlayerOrderState.None;
+            playerAttackTarget = null;
+            MorphFlow01 = 0f;
+            CurrentPassiveBiomassPerSecond = 0f;
+            assemblyNucleusLost = false;
+            ResetPartCounters();
+
+            for (int i = 0; i < doomed.Count; i++)
+            {
+                V5CellEntity cell = doomed[i];
+                if (cell == null) continue;
+                Vector2 outward = (Vector2)cell.transform.position - center;
+                if (outward.sqrMagnitude < 0.01f) outward = Random.insideUnitCircle;
+                outward.Normalize();
+                V5MorphFadeOut fade = cell.gameObject.AddComponent<V5MorphFadeOut>();
+                fade.Begin(outward * (RevertScatterSpeed * 0.55f), 0.75f);
+            }
+
+            LastMessage = BlueprintName + " fallo de ensamblaje: " + reason + ".";
+            if (manager != null) manager.LastMessage = LastMessage;
+            if (gm != null && gm.Selection != null) gm.Selection.ClearSelection();
+            V5FeedbackSystem feedback = FindFirstObjectByType<V5FeedbackSystem>();
+            if (feedback != null) feedback.Push(ActiveBlueprintName + " perdido en ensamblaje", center, new Color(1f, 0.42f, 0.28f, 1f));
+            DisposeRuntimeInstance();
         }
 
         private void TickCollectorAutofarm(V5GameManager gm, V5CellEntity anchorCell, bool playerDirected)

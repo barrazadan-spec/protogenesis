@@ -134,6 +134,26 @@ namespace Protogenesis.V5
             }
         }
 
+        public void RaiseLightOasis(Vector2 world, float radius, float centerLight = 0.95f, float edgeLight = 0.58f)
+        {
+            if (lightLevel == null) return;
+            int cx, cy;
+            WorldToTile(world, out cx, out cy);
+            int r = Mathf.CeilToInt(radius / TileSize);
+            for (int x = Mathf.Max(0, cx - r); x <= Mathf.Min(Width - 1, cx + r); x++)
+            {
+                for (int y = Mathf.Max(0, cy - r); y <= Mathf.Min(Height - 1, cy + r); y++)
+                {
+                    float distance = Vector2.Distance(world, TileCenterWorld(x, y));
+                    if (distance > radius) continue;
+                    float falloff = 1f - distance / Mathf.Max(0.001f, radius);
+                    float shaped = falloff * falloff * (3f - 2f * falloff);
+                    float oasisLight = Mathf.Lerp(edgeLight, centerLight, shaped);
+                    lightLevel[x, y] = Mathf.Max(lightLevel[x, y], oasisLight);
+                }
+            }
+        }
+
         public void ApplyScenarioBias(V5ScenarioDefinition def)
         {
             if (def == null || nutrients == null) return;
