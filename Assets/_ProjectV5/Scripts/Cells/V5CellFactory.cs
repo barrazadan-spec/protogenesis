@@ -8,8 +8,13 @@ namespace Protogenesis.V5
         {
             V5CellEntity cell = CreateCell("MotherCell", position);
             cell.Initialize(V5CellRole.Mother, true, V5EvolutionPath.Uncommitted, position);
+            cell.IsNexus = true;
             if (V5GameManager.Instance != null && V5GameManager.Instance.CoreMode)
+            {
+                cell.Stats.maxHp = 1200f;
+                cell.Stats.currentHp = 1200f;
                 cell.Stats.speed = Mathf.Max(cell.Stats.speed, 3.35f);
+            }
             cell.Mother = cell;
             V5GameManager.Instance.MotherCell = cell;
             cell.ForceInstallStructure(V5StructureId.GeneticCompartment);
@@ -155,6 +160,7 @@ namespace Protogenesis.V5
             {
                 V5GameManager.Instance.MotherCell = cell;
                 cell.Mother = cell;
+                cell.IsNexus = true;
                 if (V5GameManager.Instance.CameraController != null) V5GameManager.Instance.CameraController.FollowTarget = cell.transform;
             }
             return cell;

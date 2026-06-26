@@ -56,6 +56,7 @@ namespace Protogenesis.V5
         private const float MinMorphAssemblySeconds = 0.8f;
         private const float EngulfCooldown = 0.6f;
         private const float RangedAttackFeedbackInterval = 0.12f;
+        private const float CombatIndicatorSeconds = 0.6f;
 
         private enum PlayerOrderState { None, Move, Attack, AttackMove, Farm, Hold }
 
@@ -188,7 +189,10 @@ namespace Protogenesis.V5
         private float organismAngle;
         private float lastEngulfTime = float.NegativeInfinity;
         private float lastRangedAttackFeedbackTime = float.NegativeInfinity;
+        private float lastCombatAt = float.NegativeInfinity;
         private V5CellEntity nucleusCell;
+        private SpriteRenderer combatRingRenderer;
+        private static Sprite combatRingSprite;
         private bool isRuntimeInstance;
         private bool isEnemyOrganism;
         private bool isNeutralOrganism;
@@ -1462,6 +1466,7 @@ namespace Protogenesis.V5
             }
 
             members.Clear();
+            DestroyCombatIndicator();
             slotOffsets.Clear();
             startOffsets.Clear();
             slotRoles.Clear();
@@ -1563,6 +1568,7 @@ namespace Protogenesis.V5
             }
 
             members.Clear();
+            DestroyCombatIndicator();
             slotOffsets.Clear();
             startOffsets.Clear();
             slotRoles.Clear();
@@ -1781,6 +1787,7 @@ namespace Protogenesis.V5
             ApplyRangedAttack(gm, nucleus);
             EngulfTouchingBiomass(gm, nucleus, bank);
             EngulfTouchingEnemies(gm, nucleus, bank);
+            UpdateCombatIndicator(nucleus);
             if (members.Count == 0) ForceClear();
         }
 
@@ -1809,6 +1816,7 @@ namespace Protogenesis.V5
             nucleus.Directive = V5Directive.Move;
             nucleus.DirectiveTarget = holdPosition;
             UpdateMorphFormation(nucleus);
+            UpdateCombatIndicator(nucleus);
         }
 
         private void UpdateMorphFormation(V5CellEntity nucleus)
@@ -1829,6 +1837,67 @@ namespace Protogenesis.V5
                 cell.MoveMorphedToSlot(slot, FormationFollowSpeed);
                 cell.SetSelected(cell.Selected);
             }
+        }
+
+        private void MarkCombat()
+        {
+            lastCombatAt = Time.time;
+        }
+
+        private void UpdateCombatIndicator(V5CellEntity nucleus)
+        {
+            if (!isRuntimeInstance || nucleus == null)
+            {
+                DestroyCombatIndicator();
+                return;
+            }
+
+            bool inCombat = Time.time - lastCombatAt < CombatIndicatorSeconds;
+            if (!inCombat)
+            {
+                if (combatRingRenderer != null) combatRingRenderer.enabled = false;
+                return;
+            }
+
+            EnsureCombatIndicator(nucleus);
+            if (combatRingRenderer == null) return;
+
+            float pulse = Mathf.Sin(Time.time * 18f) * 0.5f + 0.5f;
+            float scale = Mathf.Lerp(1.0f, 1.15f, pulse) * Mathf.Clamp(OrganismSizeRadius() * 1.25f, 1.35f, 7.0f);
+            float alpha = Mathf.Lerp(0.42f, 0.82f, pulse);
+            combatRingRenderer.enabled = true;
+            combatRingRenderer.color = new Color(1f, 0.5f, 0.1f, alpha);
+            combatRingRenderer.transform.localPosition = Vector3.zero;
+            combatRingRenderer.transform.localRotation = Quaternion.identity;
+            combatRingRenderer.transform.localScale = Vector3.one * scale;
+        }
+
+        private void EnsureCombatIndicator(V5CellEntity nucleus)
+        {
+            if (nucleus == null) return;
+            if (combatRingSprite == null) combatRingSprite = V5ProceduralSprites.CreateRingSprite(96, 0.16f);
+            if (combatRingRenderer == null)
+            {
+                GameObject child = new GameObject("CombatPulseRing");
+                child.transform.SetParent(nucleus.transform, false);
+                child.transform.localPosition = Vector3.zero;
+                combatRingRenderer = child.AddComponent<SpriteRenderer>();
+                combatRingRenderer.sprite = combatRingSprite;
+                combatRingRenderer.sortingOrder = 43;
+                combatRingRenderer.enabled = false;
+            }
+            else if (combatRingRenderer.transform.parent != nucleus.transform)
+            {
+                combatRingRenderer.transform.SetParent(nucleus.transform, false);
+                combatRingRenderer.transform.localPosition = Vector3.zero;
+            }
+        }
+
+        private void DestroyCombatIndicator()
+        {
+            if (combatRingRenderer == null) return;
+            Destroy(combatRingRenderer.gameObject);
+            combatRingRenderer = null;
         }
 
         private void TickNeutralRoaming(V5CellEntity nucleus)
@@ -1951,6 +2020,7 @@ namespace Protogenesis.V5
                     Destroy(cell.gameObject);
                 }
                 members.Clear();
+                DestroyCombatIndicator();
                 slotOffsets.Clear();
                 startOffsets.Clear();
                 slotRoles.Clear();
@@ -1977,6 +2047,7 @@ namespace Protogenesis.V5
                     members[i].ClearOrganismMorphSlot();
                 }
             members.Clear();
+            DestroyCombatIndicator();
             slotOffsets.Clear();
             startOffsets.Clear();
             slotRoles.Clear();
@@ -2330,9 +2401,10 @@ namespace Protogenesis.V5
                     continue;
                 }
 
-                if (CanEngulfEnemy(enemy, organismRadius) && Time.time >= lastEngulfTime + EngulfCooldown)
+                if (CanEngulfEnemy(enemy, organismRadius) && !enemy.IsNexus && Time.time >= lastEngulfTime + EngulfCooldown)
                 {
                     enemy.Damage(enemy.Stats.maxHp + enemy.Stats.currentHp + 20f, V5DamageKind.Physical, anchorCell.transform.position);
+                    MarkCombat();
                     lastEngulfTime = Time.time;
                     if (!isEnemyOrganism && !isNeutralOrganism) bank.Resources.biomass += 18f;
                     V5FeedbackSystem feedback = FindFirstObjectByType<V5FeedbackSystem>();
@@ -2360,10 +2432,12 @@ namespace Protogenesis.V5
             float bodyPressure = Mathf.Max(0f, LiveBodyCount * 0.08f + LiveMouthCount * 0.36f);
             float damage = (5f + mouthPressure + bodyPressure) * combatMultiplier * Time.deltaTime;
             targetOrganism.ReceiveOrganismDamage(damage, GetActiveBlueprint().DamageKind, anchorCell.transform.position);
+            MarkCombat();
         }
 
         private void ReceiveOrganismDamage(float damage, V5DamageKind damageKind, Vector2 source)
         {
+            if (damage > 0f) MarkCombat();
             V5CellEntity target = EnsureNucleus();
             if (target == null && members.Count > 0) target = members[0];
             if (target != null) target.Damage(damage, damageKind, source);
@@ -2377,6 +2451,7 @@ namespace Protogenesis.V5
             float bodyPressure = Mathf.Max(0f, LiveBodyCount * 0.09f + LiveMouthCount * 0.42f);
             float damage = (8f + mouthPressure + bodyPressure) * combatMultiplier * Time.deltaTime;
             enemy.Damage(damage, GetActiveBlueprint().DamageKind, anchorCell.transform.position);
+            MarkCombat();
 
             if (Random.value < Time.deltaTime * 3.0f)
             {
@@ -2434,6 +2509,7 @@ namespace Protogenesis.V5
             if (Vector2.SqrMagnitude((Vector2)target.transform.position - source) > range * range) return;
             float damage = damagePerSecond * Time.deltaTime;
             target.Damage(damage, blueprint.DamageKind, source);
+            MarkCombat();
 
             if (Time.time >= lastRangedAttackFeedbackTime + RangedAttackFeedbackInterval)
             {

@@ -11,17 +11,48 @@ namespace Protogenesis.V5
         public float RivalCoreHp = 2400f;
         public float RivalCoreRadius = 4.1f;
         public float SpawnRadiusFraction = 0.78f;
-        public int TardigradeDefenders = 1;
-        public int HarasserDefenders = 1;
-        public int VolvoxDefenders = 1;
-        public int AnchorDefenders = 1;
+        public int TardigradeDefenders = 0;
+        public int HarasserDefenders = 0;
+        public int VolvoxDefenders = 0;
+        public int AnchorDefenders = 0;
         public int InterdictorDefenders = 0;
+        public int RivalGarrisonCap = 7;
+        public float ProductionInterval = 10f;
+        public float InitialProductionDelay = 20f;
+        public float MidTierUnlockTime = 70f;
+        public float HighTierUnlockTime = 160f;
+        public int AttackWaveSize = 4;
         public string LastMessage = "Colonia rival esperando.";
 
         private V5CellEntity rivalCore;
         private bool rivalSpawned;
         private bool victoryClaimed;
-        private readonly List<V5OrganismMorph> defenders = new List<V5OrganismMorph>(4);
+        private float productionTimer;
+        private int nextDefenderKindIndex;
+        private readonly List<V5OrganismMorph> defenders = new List<V5OrganismMorph>(8);
+        private readonly List<V5OrganismMorph> attackForce = new List<V5OrganismMorph>(8);
+        private static readonly V5OrganismBlueprintKind[] LowTierRoster =
+        {
+            V5OrganismBlueprintKind.Harasser,
+            V5OrganismBlueprintKind.Fighter
+        };
+        private static readonly V5OrganismBlueprintKind[] MidTierRoster =
+        {
+            V5OrganismBlueprintKind.Harasser,
+            V5OrganismBlueprintKind.Fighter,
+            V5OrganismBlueprintKind.Volvox,
+            V5OrganismBlueprintKind.Anchor,
+            V5OrganismBlueprintKind.Interdictor
+        };
+        private static readonly V5OrganismBlueprintKind[] HighTierRoster =
+        {
+            V5OrganismBlueprintKind.Harasser,
+            V5OrganismBlueprintKind.Fighter,
+            V5OrganismBlueprintKind.Volvox,
+            V5OrganismBlueprintKind.Anchor,
+            V5OrganismBlueprintKind.Interdictor,
+            V5OrganismBlueprintKind.Tardigrade
+        };
 
         public V5CellEntity RivalCore { get { return rivalCore; } }
         public bool RivalSpawned { get { return rivalSpawned && rivalCore != null; } }
@@ -41,7 +72,10 @@ namespace Protogenesis.V5
                 Vector2 world = rivalCore != null ? (Vector2)rivalCore.transform.position : Vector2.zero;
                 if (feedback != null) feedback.Push("VICTORIA: nucleo rival destruido", world, new Color(0.7f, 1f, 0.45f, 1f));
                 gm.Win("nucleo rival destruido");
+                return;
             }
+
+            TickProduction(gm);
         }
 
         public void ResetForNewRun()
@@ -49,7 +83,10 @@ namespace Protogenesis.V5
             rivalCore = null;
             rivalSpawned = false;
             victoryClaimed = false;
+            productionTimer = 0f;
+            nextDefenderKindIndex = 0;
             defenders.Clear();
+            attackForce.Clear();
             LastMessage = "Colonia rival esperando.";
         }
 
@@ -67,6 +104,7 @@ namespace Protogenesis.V5
             if (rivalCore == null) return;
 
             rivalCore.name = "V5_RivalCore";
+            rivalCore.IsNexus = true;
             rivalCore.Stats.maxHp = Mathf.Max(500f, RivalCoreHp);
             rivalCore.Stats.currentHp = rivalCore.Stats.maxHp;
             rivalCore.Stats.radius = Mathf.Max(1.5f, RivalCoreRadius);
@@ -83,6 +121,7 @@ namespace Protogenesis.V5
             view.Initialize(this, spawn);
 
             SpawnDefenders(gm, spawn);
+            productionTimer = Mathf.Max(0f, ProductionInterval);
             rivalSpawned = true;
             LastMessage = "Nucleo rival detectado: destruilo para ganar.";
 
@@ -106,6 +145,7 @@ namespace Protogenesis.V5
         private void SpawnDefenders(V5GameManager gm, Vector2 center)
         {
             defenders.Clear();
+            attackForce.Clear();
             int spawned = 0;
             for (int i = 0; i < Mathf.Max(0, TardigradeDefenders); i++)
             {
@@ -138,12 +178,152 @@ namespace Protogenesis.V5
             }
         }
 
+        private void TickProduction(V5GameManager gm)
+        {
+            if (gm == null || gm.OrganismMorph == null || gm.MotherCell == null || rivalCore == null || rivalCore.Stats.currentHp <= 0f) return;
+            PruneDefenders();
+            PruneAttackForce();
+            TryLaunchAttackWave(gm);
+            if (gm.ElapsedSeconds < Mathf.Max(0f, InitialProductionDelay)) return;
+
+            productionTimer += Time.deltaTime;
+            if (productionTimer < Mathf.Max(0.5f, ProductionInterval)) return;
+
+            productionTimer = 0f;
+            if (defenders.Count < Mathf.Max(0, RivalGarrisonCap)) SpawnProducedDefender(gm);
+            else SpawnProducedAttackUnit(gm);
+            TryLaunchAttackWave(gm);
+        }
+
+        private void PruneDefenders()
+        {
+            for (int i = defenders.Count - 1; i >= 0; i--)
+            {
+                V5OrganismMorph organism = defenders[i];
+                if (organism == null || organism.NucleusCell == null || organism.NucleusCell.Stats.currentHp <= 0f)
+                    defenders.RemoveAt(i);
+            }
+        }
+
+        private void PruneAttackForce()
+        {
+            for (int i = attackForce.Count - 1; i >= 0; i--)
+            {
+                V5OrganismMorph organism = attackForce[i];
+                if (organism == null || organism.NucleusCell == null || organism.NucleusCell.Stats.currentHp <= 0f)
+                    attackForce.RemoveAt(i);
+            }
+        }
+
+        private void SpawnProducedDefender(V5GameManager gm)
+        {
+            if (gm == null || gm.OrganismMorph == null || rivalCore == null) return;
+            V5OrganismBlueprintKind kind = NextProducedDefenderKind(gm.ElapsedSeconds);
+            int index = defenders.Count;
+            float radius = 7.6f + Mathf.Min(index, Mathf.Max(0, RivalGarrisonCap - 1)) * 0.55f;
+            Vector2 center = rivalCore.transform.position;
+            Vector2 position = center + RingOffset(index, radius);
+            V5OrganismMorph organism = gm.OrganismMorph.SpawnEnemyOrganism(kind, position, RewardCellsFor(kind));
+            AddDefender(organism);
+            if (organism != null && organism.NucleusCell != null)
+            {
+                LastMessage = "Nucleo rival produjo " + organism.ActiveBlueprintName + " (" + defenders.Count + "/" + Mathf.Max(0, RivalGarrisonCap) + ").";
+                V5FeedbackSystem feedback = FindFirstObjectByType<V5FeedbackSystem>();
+                if (feedback != null) feedback.Push(LastMessage, organism.NucleusCell.transform.position, new Color(1f, 0.34f, 0.22f, 1f));
+            }
+        }
+
+        private void SpawnProducedAttackUnit(V5GameManager gm)
+        {
+            if (gm == null || gm.OrganismMorph == null || rivalCore == null) return;
+            V5OrganismBlueprintKind kind = NextProducedDefenderKind(gm.ElapsedSeconds);
+            int index = defenders.Count + attackForce.Count;
+            float radius = 11.4f + Mathf.Min(attackForce.Count, Mathf.Max(0, AttackWaveSize - 1)) * 0.7f;
+            Vector2 center = rivalCore.transform.position;
+            Vector2 position = center + RingOffset(index, radius);
+            V5OrganismMorph organism = gm.OrganismMorph.SpawnEnemyOrganism(kind, position, RewardCellsFor(kind));
+            AddAttackForceUnit(organism);
+            if (organism != null && organism.NucleusCell != null)
+            {
+                LastMessage = "Nucleo rival prepara oleada: " + organism.ActiveBlueprintName + " (" + attackForce.Count + "/" + Mathf.Max(1, AttackWaveSize) + ").";
+                V5FeedbackSystem feedback = FindFirstObjectByType<V5FeedbackSystem>();
+                if (feedback != null) feedback.Push(LastMessage, organism.NucleusCell.transform.position, new Color(1f, 0.42f, 0.18f, 1f));
+            }
+        }
+
+        private void AddAttackForceUnit(V5OrganismMorph organism)
+        {
+            if (organism == null || organism.NucleusCell == null) return;
+            attackForce.Add(organism);
+            organism.NucleusCell.Directive = V5Directive.Defend;
+            organism.NucleusCell.DirectiveTarget = organism.NucleusCell.transform.position;
+            DisableEnemyBrain(organism);
+        }
+
+        private void TryLaunchAttackWave(V5GameManager gm)
+        {
+            if (gm == null || gm.MotherCell == null) return;
+            PruneAttackForce();
+            int waveSize = Mathf.Max(1, AttackWaveSize);
+            if (attackForce.Count < waveSize) return;
+
+            int launched = attackForce.Count;
+            for (int i = 0; i < attackForce.Count; i++)
+            {
+                V5OrganismMorph organism = attackForce[i];
+                if (organism == null || organism.NucleusCell == null) continue;
+                DisableEnemyBrain(organism);
+                organism.IssueAttack(gm.MotherCell);
+            }
+
+            attackForce.Clear();
+            LastMessage = "Oleada rival lanzada: " + launched + " tropas hacia la madre.";
+            V5FeedbackSystem feedback = FindFirstObjectByType<V5FeedbackSystem>();
+            if (feedback != null && rivalCore != null) feedback.Push(LastMessage, rivalCore.transform.position, new Color(1f, 0.2f, 0.12f, 1f));
+        }
+
+        private V5OrganismBlueprintKind NextProducedDefenderKind(float elapsedSeconds)
+        {
+            V5OrganismBlueprintKind[] roster = ProductionRosterForTime(elapsedSeconds);
+            if (roster == null || roster.Length == 0) return V5OrganismBlueprintKind.Harasser;
+            V5OrganismBlueprintKind kind = roster[Mathf.Abs(nextDefenderKindIndex) % roster.Length];
+            nextDefenderKindIndex++;
+            return kind;
+        }
+
+        private V5OrganismBlueprintKind[] ProductionRosterForTime(float elapsedSeconds)
+        {
+            if (elapsedSeconds >= Mathf.Max(0f, HighTierUnlockTime)) return HighTierRoster;
+            if (elapsedSeconds >= Mathf.Max(0f, MidTierUnlockTime)) return MidTierRoster;
+            return LowTierRoster;
+        }
+
+        private int RewardCellsFor(V5OrganismBlueprintKind kind)
+        {
+            switch (kind)
+            {
+                case V5OrganismBlueprintKind.Tardigrade: return 10;
+                case V5OrganismBlueprintKind.Harasser: return 6;
+                case V5OrganismBlueprintKind.Volvox: return 8;
+                case V5OrganismBlueprintKind.Anchor: return 9;
+                case V5OrganismBlueprintKind.Interdictor: return 8;
+                case V5OrganismBlueprintKind.Fighter: return 7;
+                default: return 6;
+            }
+        }
+
         private void AddDefender(V5OrganismMorph organism)
         {
             if (organism == null || organism.NucleusCell == null) return;
             defenders.Add(organism);
             organism.NucleusCell.Directive = V5Directive.Defend;
             organism.NucleusCell.DirectiveTarget = organism.NucleusCell.transform.position;
+            DisableEnemyBrain(organism);
+        }
+
+        private void DisableEnemyBrain(V5OrganismMorph organism)
+        {
+            if (organism == null || organism.NucleusCell == null) return;
             V5EnemyBrain brain = organism.NucleusCell.GetComponent<V5EnemyBrain>();
             if (brain != null) brain.enabled = false;
         }

@@ -10,7 +10,9 @@ namespace Protogenesis.V5
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space)) TogglePause();
+            V5GameManager gm = V5GameManager.Instance;
+            bool coreMode = gm != null && gm.CoreMode;
+            if (!coreMode && Input.GetKeyDown(KeyCode.Space)) TogglePause();
             if (Input.GetKeyDown(KeyCode.Minus) || Input.GetKeyDown(KeyCode.KeypadMinus)) SetSpeed(Mathf.Max(0.25f, SimulationSpeed - 0.25f));
             if (Input.GetKeyDown(KeyCode.Equals) || Input.GetKeyDown(KeyCode.KeypadPlus)) SetSpeed(Mathf.Min(3f, SimulationSpeed + 0.25f));
             if (Input.GetKeyDown(KeyCode.BackQuote)) MinimalOverlayMode = !MinimalOverlayMode;

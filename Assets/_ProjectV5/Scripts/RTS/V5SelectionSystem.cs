@@ -229,10 +229,12 @@ namespace Protogenesis.V5
         {
             V5GameManager gm = V5GameManager.Instance;
             bool movedOrganism = false;
+            bool issued = false;
             if (gm != null && gm.OrganismMorph != null && gm.OrganismMorph.SelectionContainsOrganism(Selected))
             {
                 gm.OrganismMorph.IssueMove(target);
                 movedOrganism = true;
+                issued = true;
             }
 
             if (Selected.Count == 0 && gm != null && gm.MotherCell != null)
@@ -240,6 +242,7 @@ namespace Protogenesis.V5
                 if (gm.OrganismMorph != null && gm.OrganismMorph.IsMorphed)
                 {
                     gm.OrganismMorph.IssueMove(target);
+                    if (gm.OrganismMorph.ActiveOrganismCount == 1) V5OrderMarker.Spawn(target, V5OrderMarker.MoveColor);
                     return;
                 }
                 if (gm.CoreMode) return;
@@ -251,7 +254,9 @@ namespace Protogenesis.V5
                 if (Selected[i].IsAttachedToBody || Selected[i].IsMorphedOrganism) continue;
                 if (movedOrganism && gm != null && gm.OrganismMorph != null && gm.OrganismMorph.IsOrganismCell(Selected[i])) continue;
                 Selected[i].SetPlayerMoveOrder(target + Random.insideUnitCircle * 0.5f);
+                issued = true;
             }
+            if (issued) V5OrderMarker.Spawn(target, V5OrderMarker.MoveColor);
         }
 
         public void IssueAttack(V5CellEntity target)
@@ -259,10 +264,12 @@ namespace Protogenesis.V5
             if (target == null) return;
             V5GameManager gm = V5GameManager.Instance;
             bool movedOrganism = false;
+            bool issued = false;
             if (gm != null && gm.OrganismMorph != null && (gm.OrganismMorph.SelectionContainsOrganism(Selected) || Selected.Count == 0))
             {
                 gm.OrganismMorph.IssueAttack(target);
                 movedOrganism = true;
+                issued = gm.OrganismMorph.SelectionContainsOrganism(Selected) || (Selected.Count == 0 && gm.OrganismMorph.ActiveOrganismCount == 1);
             }
 
             for (int i = 0; i < Selected.Count; i++)
@@ -272,17 +279,21 @@ namespace Protogenesis.V5
                 if (cell.IsAttachedToBody || cell.IsMorphedOrganism) continue;
                 if (movedOrganism && gm != null && gm.OrganismMorph != null && gm.OrganismMorph.IsOrganismCell(cell)) continue;
                 cell.SetPlayerAttackOrder(target);
+                issued = true;
             }
+            if (issued) V5OrderMarker.Spawn(target.transform.position, V5OrderMarker.AttackColor);
         }
 
         public void IssueAttackMove(Vector2 target)
         {
             V5GameManager gm = V5GameManager.Instance;
             bool movedOrganism = false;
+            bool issued = false;
             if (gm != null && gm.OrganismMorph != null && (gm.OrganismMorph.SelectionContainsOrganism(Selected) || Selected.Count == 0))
             {
                 gm.OrganismMorph.IssueAttackMove(target);
                 movedOrganism = true;
+                issued = gm.OrganismMorph.SelectionContainsOrganism(Selected) || (Selected.Count == 0 && gm.OrganismMorph.ActiveOrganismCount == 1);
             }
 
             for (int i = 0; i < Selected.Count; i++)
@@ -292,7 +303,9 @@ namespace Protogenesis.V5
                 if (cell.IsAttachedToBody || cell.IsMorphedOrganism) continue;
                 if (movedOrganism && gm != null && gm.OrganismMorph != null && gm.OrganismMorph.IsOrganismCell(cell)) continue;
                 cell.SetPlayerAttackMoveOrder(target + Random.insideUnitCircle * 0.55f);
+                issued = true;
             }
+            if (issued) V5OrderMarker.Spawn(target, V5OrderMarker.AttackColor);
         }
 
         public void IssueFarm()
@@ -417,6 +430,49 @@ namespace Protogenesis.V5
             GUI.DrawTexture(new Rect(rect.xMin, rect.yMin, 2f, rect.height), Texture2D.whiteTexture);
             GUI.DrawTexture(new Rect(rect.xMax - 2f, rect.yMin, 2f, rect.height), Texture2D.whiteTexture);
             GUI.color = previous;
+        }
+    }
+
+    public class V5OrderMarker : MonoBehaviour
+    {
+        public static readonly Color MoveColor = new Color(0.30f, 0.70f, 1.0f, 1f);
+        public static readonly Color AttackColor = new Color(1.0f, 0.35f, 0.30f, 1f);
+
+        private const float Lifetime = 0.45f;
+        private static Sprite ringSprite;
+
+        private SpriteRenderer renderer;
+        private Color baseColor;
+        private float age;
+
+        public static void Spawn(Vector2 position, Color color)
+        {
+            GameObject go = new GameObject("V5_OrderMarker");
+            go.transform.position = new Vector3(position.x, position.y, 0f);
+            V5OrderMarker marker = go.AddComponent<V5OrderMarker>();
+            marker.Initialize(color);
+        }
+
+        private void Initialize(Color color)
+        {
+            if (ringSprite == null) ringSprite = V5ProceduralSprites.CreateRingSprite(96, 0.14f);
+            baseColor = color;
+            renderer = gameObject.AddComponent<SpriteRenderer>();
+            renderer.sprite = ringSprite;
+            renderer.sortingOrder = 5;
+            renderer.color = baseColor;
+            transform.localScale = Vector3.one * 1.4f;
+        }
+
+        private void Update()
+        {
+            age += Time.deltaTime;
+            float t = Mathf.Clamp01(age / Lifetime);
+            float eased = t * t * (3f - 2f * t);
+            transform.localScale = Vector3.one * Mathf.Lerp(1.4f, 0.6f, eased);
+            if (renderer != null)
+                renderer.color = new Color(baseColor.r, baseColor.g, baseColor.b, Mathf.Lerp(1f, 0f, eased));
+            if (t >= 1f) Destroy(gameObject);
         }
     }
 }

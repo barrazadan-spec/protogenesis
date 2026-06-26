@@ -18,6 +18,7 @@ namespace Protogenesis.V5
         private GUIStyle button;
         private GUIStyle disabledButton;
         private Vector2 motherUnitsScroll;
+        private bool motherPanelVisible;
         private bool unitPanelVisible;
         public bool ShowMotherPanel;
 
@@ -35,8 +36,7 @@ namespace Protogenesis.V5
         {
             V5GameManager gm = V5GameManager.Instance;
             if (gm == null || !gm.CoreMode || gm.MotherCell == null) return;
-            if (Input.GetKeyDown(KeyCode.Space)) SelectMother(true);
-            if (Input.GetKeyDown(KeyCode.Escape)) OpenMotherPanel(true);
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Escape)) OpenMotherPanel(true);
         }
 
         public static void SelectMother(bool focusCamera)
@@ -93,10 +93,16 @@ namespace Protogenesis.V5
             }
 
             V5CellEntity focused = FocusedSelection(gm);
+            motherPanelVisible = focused == mother || ShowMotherPanel;
             unitPanelVisible = focused != null && focused != mother;
-            if (unitPanelVisible)
+            if (focused == mother)
+            {
+                DrawMotherProductionPanel(gm, mother, production);
+            }
+            else if (focused != null)
             {
                 ShowMotherPanel = false;
+                motherPanelVisible = false;
                 DrawSelectedUnitPanel(gm, focused);
             }
             else if (ShowMotherPanel)
@@ -121,7 +127,7 @@ namespace Protogenesis.V5
         {
             Vector2 guiPosition = new Vector2(screenMousePosition.x, Screen.height - screenMousePosition.y);
             return lastHudRect.Contains(guiPosition) ||
-                   (instance != null && instance.ShowMotherPanel && lastMotherPanelRect.Contains(guiPosition)) ||
+                   (instance != null && instance.motherPanelVisible && lastMotherPanelRect.Contains(guiPosition)) ||
                    (instance != null && instance.unitPanelVisible && lastUnitPanelRect.Contains(guiPosition));
         }
 
@@ -348,7 +354,10 @@ namespace Protogenesis.V5
         private void DrawMotherProductionPanel(V5GameManager gm, V5CellEntity mother, V5CoreMotherProductionSystem production)
         {
             V5OrganismMorph morph = gm != null ? gm.OrganismMorph : null;
-            Rect r = new Rect(10f, lastHudRect.yMax + 8f, 456f, 572f);
+            float panelHeight = Mathf.Min(572f, Mathf.Max(430f, Screen.height - 20f));
+            float panelY = Mathf.Min(lastHudRect.yMax + 8f, Screen.height - panelHeight - 10f);
+            panelY = Mathf.Max(10f, panelY);
+            Rect r = new Rect(10f, panelY, 456f, panelHeight);
             lastMotherPanelRect = r;
 
             Color previousColor = GUI.color;
@@ -377,7 +386,10 @@ namespace Protogenesis.V5
             GUI.Label(new Rect(x, y, w, 18f), "Unidades", title);
             y += 22f;
 
-            Rect unitsScrollRect = new Rect(x, y, w, 220f);
+            float upgradeHeight = 154f;
+            float panelBottomPadding = 12f;
+            float availableUnitsHeight = r.yMax - y - 12f - upgradeHeight - panelBottomPadding;
+            Rect unitsScrollRect = new Rect(x, y, w, Mathf.Clamp(availableUnitsHeight, 108f, 220f));
             GUI.color = new Color(0.08f, 0.12f, 0.12f, 0.45f);
             GUI.Box(unitsScrollRect, GUIContent.none, box);
             GUI.color = previousColor;
@@ -417,7 +429,7 @@ namespace Protogenesis.V5
             GUI.EndScrollView();
             y += unitsScrollRect.height + 12f;
 
-            Rect upgrades = new Rect(x, y, w, 154f);
+            Rect upgrades = new Rect(x, y, w, upgradeHeight);
             GUI.color = new Color(0.08f, 0.12f, 0.12f, 0.62f);
             GUI.Box(upgrades, GUIContent.none, box);
             GUI.color = previousColor;

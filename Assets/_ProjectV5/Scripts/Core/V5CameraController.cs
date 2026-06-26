@@ -8,7 +8,7 @@ namespace Protogenesis.V5
         public float panSpeed = 16f;
         public float zoomSpeed = 4f;
         public float minZoom = 5f;
-        public float maxZoom = 34f;
+        public float maxZoom = 58f;
         private Camera cam;
         private Vector3 lastPanMouse;
 

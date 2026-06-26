@@ -43,9 +43,9 @@ namespace Protogenesis.V5
             int finalHeight = useScenarioPreset ? scenarioDef.mapHeight : mapHeight;
             float finalTileSize = useScenarioPreset ? scenarioDef.tileSize : tileSize;
             int finalResources = useScenarioPreset ? scenarioDef.startingResources : startingResourceNodes;
-            finalWidth = Mathf.Max(finalWidth, 180);
-            finalHeight = Mathf.Max(finalHeight, 180);
-            finalResources = Mathf.Clamp(finalResources, 62, 78);
+            finalWidth = Mathf.Max(finalWidth, 270);
+            finalHeight = Mathf.Max(finalHeight, 270);
+            finalResources = Mathf.Clamp(finalResources, 90, 115);
             int finalNeutrals = useScenarioPreset ? scenarioDef.neutralCells : neutralCells;
             bool finalSpawnEnemies = spawnEnemies && (!useScenarioPreset || scenarioDef.spawnEnemies);
 
@@ -158,8 +158,9 @@ namespace Protogenesis.V5
             int finalHeight = useScenarioPreset ? scenarioDef.mapHeight : mapHeight;
             float finalTileSize = useScenarioPreset ? scenarioDef.tileSize : tileSize;
             int finalResources = useScenarioPreset ? scenarioDef.startingResources : startingResourceNodes;
-            finalWidth = Mathf.Max(finalWidth, 280);
-            finalHeight = Mathf.Max(finalHeight, 280);
+            finalWidth = Mathf.Max(finalWidth, 270);
+            finalHeight = Mathf.Max(finalHeight, 270);
+            finalResources = Mathf.Clamp(finalResources, 90, 115);
 
             gm.Environment = GetOrCreate<V5EnvironmentGrid>("V5_EnvironmentGrid");
             gm.Environment.Initialize(finalWidth, finalHeight, finalTileSize, Mathf.Min(finalWidth, finalHeight) * finalTileSize * 0.47f);

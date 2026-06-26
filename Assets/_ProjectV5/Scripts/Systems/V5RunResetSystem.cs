@@ -26,8 +26,8 @@ namespace Protogenesis.V5
 
             if (gm.Environment != null)
             {
-                int width = gm.CoreMode ? Mathf.Max(def.mapWidth, 280) : def.mapWidth;
-                int height = gm.CoreMode ? Mathf.Max(def.mapHeight, 280) : def.mapHeight;
+                int width = gm.CoreMode ? Mathf.Max(def.mapWidth, 270) : def.mapWidth;
+                int height = gm.CoreMode ? Mathf.Max(def.mapHeight, 270) : def.mapHeight;
                 gm.Environment.Initialize(width, height, def.tileSize, Mathf.Min(width, height) * def.tileSize * 0.47f);
                 gm.Environment.ApplyScenarioBias(def);
             }
@@ -39,7 +39,7 @@ namespace Protogenesis.V5
             }
             if (gm.Resources != null)
             {
-                gm.Resources.InitialNodeCount = gm.CoreMode ? Mathf.Clamp(def.startingResources, 62, 78) : def.startingResources;
+                gm.Resources.InitialNodeCount = gm.CoreMode ? Mathf.Clamp(def.startingResources, 90, 115) : def.startingResources;
                 gm.Resources.SpawnInitialNodes();
             }
 

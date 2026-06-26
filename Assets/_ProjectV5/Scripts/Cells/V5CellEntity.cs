@@ -19,6 +19,7 @@ namespace Protogenesis.V5
         public V5MembraneSegment[] Membrane = new V5MembraneSegment[6];
         public bool IsPlayerOwned = true;
         public bool IsCoreNeutral;
+        public bool IsNexus;
         public int Generation;
         public V5LineageRole LineageRole = V5LineageRole.Generalist;
         public Vector2 DirectiveTarget;
